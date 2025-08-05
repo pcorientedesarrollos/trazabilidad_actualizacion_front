@@ -27,16 +27,16 @@ export const routes: Routes = [
             { path: 'apicultores', component: ApicultoresComponent},
             { path: 'apiarios', component: ApiariosComponent},
             { path: 'acopiadores', component: AcopiadoresComponent},
-                  { path: 'transportes', component: TransportesComponent},
-                    { path: 'usuarios', component: UsuariosComponent},
-                      { path: 'entradas', component: EntradasComponent},
-                        { path: 'catalogos', component: CatalogosComponent},
-                               { path: 'utilerias', component: UtileriasComponent},
+            { path: 'transportes', component: TransportesComponent},
+            { path: 'usuarios', component: UsuariosComponent},
+            { path: 'entradas', component: EntradasComponent},
+            { path: 'catalogos', component: CatalogosComponent},
+            { path: 'utilerias', component: UtileriasComponent},
 
             //rutas hijas
         ]
     },
-
+     
 
     /* ruta comodín por si alguien ingresa una URL incorrecta */
     {
