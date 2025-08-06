@@ -1,4 +1,8 @@
-<p>button works!</p>
+<button
+  [ngClass]="[bgColor, hoverColor, sizeClasses, 'text-white', 'flex', 'items-center', 'gap-2', 'rounded-xl']"
+  (click)="clicked.emit()"
+>
+  <ng-content select="[icon]"></ng-content>  
+  {{ label }}
+</button>
 
-
-//Componente standalone : componentes que funcionan por si mismos
