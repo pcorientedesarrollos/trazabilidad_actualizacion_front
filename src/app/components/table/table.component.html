@@ -1,1 +1,62 @@
-<p>table works!</p>
+<table class="table-auto text-sm text-left rtl:text-right bg-white w-full">
+  <thead class="text-xs text-gray-700 bg-white uppercase border-b border-gray-200">
+    <tr>
+      <th scope="col" class="px-3 py-3 text-center">#</th>
+
+      <ng-container *ngFor="let col of columnas">
+        <th
+          scope="col"
+          class="px-3 py-3"
+          [ngClass]="{
+            'text-left': col.align === 'left',
+            'text-center': col.align === 'center',
+            'text-right': col.align === 'right'
+          }"
+        >
+          {{ col.label }}
+        </th>
+      </ng-container>
+
+      <th
+        scope="col"
+        class="px-3 py-3 text-center"
+        *ngIf="templateAcciones"
+      >
+        Acciones
+      </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr
+      *ngFor="let item of data; let i = index"
+      [ngClass]="i % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+      class="border-b border-gray-200 hover:bg-gray-100"
+    >
+      <td class="px-3 py-4 text-center">{{ i + 1 }}</td>
+
+      <ng-container *ngFor="let col of columnas">
+        <td
+          class="px-3 py-4"
+          [ngClass]="{
+            'text-left': col.align === 'left',
+            'text-center': col.align === 'center',
+            'text-right': col.align === 'right'
+          }"
+        >
+          {{ item[col.key] }}
+        </td>
+      </ng-container>
+
+      <td class="px-3 py-4 text-center" *ngIf="templateAcciones">
+        <div class="inline-flex gap-2 justify-center">
+          <ng-container
+            *ngTemplateOutlet="templateAcciones; context: { $implicit: item }"
+          ></ng-container>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
