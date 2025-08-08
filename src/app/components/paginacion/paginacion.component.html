@@ -1,0 +1,18 @@
+<div class="flex justify-center mt-4 gap-2">
+  <button class="bg-white  px-3 py-1 rounded border border-gray-300" [disabled]="paginaActual === 1"
+    (click)="irPagina(paginaActual - 1)">
+    Atrás
+  </button>
+
+  <ng-container *ngFor="let pagina of paginas">
+    <button class="px-3 py-1  rounded border border-gray-300"
+      [ngClass]="paginaActual === pagina ? 'bg-yellow-500 text-white font-semibold' : 'bg-white'"
+      (click)="irPagina(pagina)">
+      {{ pagina }}
+    </button>
+  </ng-container>
+  <button class="bg-white  px-3 py-1 rounded  border border-gray-300" [disabled]="paginaActual === totalPaginas"
+    (click)="irPagina(paginaActual + 1)">
+    Siguiente
+  </button>
+</div>
