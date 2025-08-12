@@ -4,10 +4,12 @@ import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from "../../components/search-bar/search-bar.component";
 import { TableComponent } from "../../components/table/table.component";
 import { PaginacionComponent } from "../../components/paginacion/paginacion.component";
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from "../../components/button/button.component";
 
 @Component({
   selector: 'app-apicultores',
-  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent],
+  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent],
   templateUrl: './apicultores.component.html',
   styleUrl: './apicultores.component.css'
 })
@@ -15,6 +17,7 @@ export class ApicultoresComponent {
   searchTerm = '';
   paginaActual = 1;
   elementosPorPagina = 7; 
+  estadoFiltro: string = 'todos';
 
   columnas = [
     { label: 'Nombre Apicultor', key: 'nombre', align: 'center' },
@@ -23,27 +26,44 @@ export class ApicultoresComponent {
     { label: 'N° Colmenas', key: 'colmenas', align: 'center' },
   ];
 
-  apicultores = [
-    { nombre: 'Julio Martín Ku', acopiador: 'Valeria Gomez', apiarios: 15, colmenas: 45 },
-    { nombre: 'Fernando May', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45 },
-    { nombre: 'Mariana Valenzuela', acopiador: 'Isabela Fuentes', apiarios: 15, colmenas: 45 },
-    { nombre: 'Sofía Villegas', acopiador: 'Santiago Delgado', apiarios: 15, colmenas: 45 },
-    { nombre: 'Leonel Rosado', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45 },
-    { nombre: 'Elías Saens', acopiador: 'Isabela Fuentes', apiarios: 15, colmenas: 45 },
-    { nombre: 'Gloria Bacells', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45 },
-    { nombre: 'Juliana Dominguez', acopiador: 'Valeria Gomez', apiarios: 15, colmenas: 45 },
-  ];
+ apicultores = [
+  { nombre: 'Julio Martín Ku', acopiador: 'Valeria Gomez', apiarios: 15, colmenas: 45, activo: true },
+  { nombre: 'Fernando May', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45, activo: true },
+  { nombre: 'Mariana Valenzuela', acopiador: 'Isabela Fuentes', apiarios: 15, colmenas: 45, activo: false },
+  { nombre: 'Sofía Villegas', acopiador: 'Santiago Delgado', apiarios: 15, colmenas: 45, activo: true },
+  { nombre: 'Leonel Rosado', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45, activo: false },
+  { nombre: 'Elías Saens', acopiador: 'Isabela Fuentes', apiarios: 15, colmenas: 45, activo: true },
+  { nombre: 'Gloria Bacells', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45, activo: false },
+  { nombre: 'Juliana Dominguez', acopiador: 'Valeria Gomez', apiarios: 15, colmenas: 45, activo: true },
+];
+
 
   get totalPaginas(): number {
     return Math.ceil(this.filtrados.length / this.elementosPorPagina);
   }
 
-  get filtrados() {
-    return this.apicultores.filter(apicultor =>
+get filtrados() {
+  return this.apicultores
+    .filter(apicultor =>
       apicultor.nombre.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
       apicultor.acopiador.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
+    )
+    .filter(apicultor => {
+      if (this.estadoFiltro === 'activos') return apicultor.activo;
+      if (this.estadoFiltro === 'inactivos') return !apicultor.activo;
+      return true; // todos
+    });
+}
+
+cambiarEstado(apicultor: any, nuevoEstado: boolean) {
+  apicultor.activo = nuevoEstado;
+  // Opcional: mostrar un mensaje o refrescar la tabla (si usas observables, emitir cambios, etc.)
+  console.log(`${nuevoEstado ? 'Activado' : 'Inactivado'} apicultor:`, apicultor);
+
+  // Reflejar inmediatamente el cambio:
+  this.paginaActual = 1; // Reiniciar paginación
+}
+
 
   get paginados() {
     const inicio = (this.paginaActual - 1) * this.elementosPorPagina;

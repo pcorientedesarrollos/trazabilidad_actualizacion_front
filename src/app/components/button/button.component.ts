@@ -13,6 +13,7 @@ export class ButtonComponent {
   @Input() bgColor: string = 'bg-green-600';
   @Input() hoverColor: string = 'hover:bg-green-700';
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
+  @Input() title?: string;
 
   @Output() clicked = new EventEmitter<void>();
 

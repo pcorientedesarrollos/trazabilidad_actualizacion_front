@@ -1,6 +1,7 @@
 <button
   [ngClass]="[bgColor, hoverColor, sizeClasses, 'text-white', 'flex', 'items-center', 'gap-2', 'rounded-xl']"
   (click)="clicked.emit()"
+  [attr.title]="title"
 >
   <ng-content select="[icon]"></ng-content>  
   {{ label }}

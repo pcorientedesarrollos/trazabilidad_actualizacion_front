@@ -3,26 +3,46 @@
   <div class="flex justify-between items-center mb-4 flex-wrap gap-4 bg-white p-3 rounded shadow">
 
 
-    <div class="w-full max-w-md ">
-      <app-search-bar [label]="'Buscar producto'" [placeholder]="'Escribe aquí...'" [value]="searchTerm"
-        (valueChange)="onSearchChange($event)">
-      </app-search-bar>
-    </div>
+<div class="w-full max-w-md flex items-center gap-4">
+  <app-search-bar
+    [label]="'Buscar producto'"
+    [placeholder]="'Escribe aquí...'"
+    [value]="searchTerm"
+    (valueChange)="onSearchChange($event)">
+  </app-search-bar>
+
+  <select
+    class="border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-6 ml-8"
+    [(ngModel)]="estadoFiltro"
+    (ngModelChange)="paginaActual = 1">
+    <option value="todos">Todos</option>
+    <option value="activos">Activos</option>
+    <option value="inactivos">Inactivos</option>
+  </select>
+</div>
+
 
     <div class="flex gap-8 mt-4 mr-6 ">
-      <button
-        [ngClass]="['bg-green-600', 'hover:bg-green-700', 'px-4 py-2', 'text-white', 'flex', 'items-center', 'gap-2', 'rounded-xl']"
-        (click)="onDownload()">
-        <span icon class="material-symbols-outlined">sim_card_download</span>
-        {{ 'Descargar' }}
-      </button>
+    <app-button
+  label="Descargar"
+  [title]="'Descargar datos'"
+  [bgColor]="'bg-green-600'"
+  [hoverColor]="'hover:bg-green-700'"
+  [size]="'md'"
+  (clicked)="onDownload()"
+>
+  <span icon class="material-symbols-outlined">sim_card_download</span>
+</app-button>
 
-      <button
-        [ngClass]="['bg-yellow-500', 'hover:bg-yellow-600', 'px-4 py-2', 'text-white', 'flex', 'items-center', 'gap-2', 'rounded-xl']"
+      <app-button
+      label="Agregar"
+        [title]="'Agregar Apicultores'"
+         [bgColor]="'bg-yellow-500'"
+         [hoverColor]="'hover:bg-yellow-700'"
+           [size]="'md'"
         (click)="onAdd()">
-        <span class="material-symbols-outlined">add_2</span>
-        {{ 'Agregar' }}
-      </button>
+    <span icon class="material-symbols-outlined">add_2</span>
+      </app-button>
     </div>
   </div>
 
@@ -31,23 +51,33 @@
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
 
     <app-table [columnas]="columnas" [data]="paginados" [templateAcciones]="accionesTemplate"></app-table>
-    <ng-template #accionesTemplate let-apicultor>
-      <button class="text-blue-600 hover:underline" (click)="editar(apicultor)">
-        <span class="material-symbols-outlined">
-          edit_square
-        </span>
-      </button>
-      <button class="text-gray-600 hover:underline" (click)="ver(apicultor)">
-        <span class="material-symbols-outlined">
-          visibility
-        </span>
-      </button>
-      <button class="text-red-600 hover:underline" (click)="eliminar(apicultor)">
-        <span class="material-symbols-outlined">
-          delete
-        </span>
-      </button>
-    </ng-template>
+<ng-template #accionesTemplate let-apicultor>
+  <button class="text-blue-600 hover:underline" (click)="editar(apicultor)">
+    <span class="material-symbols-outlined">edit_square</span>
+  </button>
+
+
+  <!-- Mostrar botón según estado y filtro -->
+  <button
+    *ngIf="estadoFiltro === 'activos' || (estadoFiltro === 'todos' && apicultor.activo)"
+    class="text-red-500 hover:underline"
+    [title]="'Baja apicultor'"
+    (click)="cambiarEstado(apicultor, false)">
+    <span class="material-symbols-outlined">delete</span>
+  </button>
+
+  <button
+    *ngIf="estadoFiltro === 'inactivos' || (estadoFiltro === 'todos' && !apicultor.activo)"
+    class="text-green-600 hover:underline"
+    [title]="'Activar apicultor'"
+    (click)="cambiarEstado(apicultor, true)">
+    <span class="material-symbols-outlined">
+check
+</span>
+  </button>
+</ng-template>
+
+
   </div>
 
   <!-- Paginación -->
