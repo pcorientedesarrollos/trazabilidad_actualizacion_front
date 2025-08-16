@@ -7,7 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginService } from './service/login.service';
-import { Login } from '../../interface/auth/auth.interface';
+import { Login } from './interface/login.interface';
+
 
 @Component({
   selector: 'app-login',
@@ -35,9 +36,7 @@ export class LoginComponent {
 
     this.service.login(data).subscribe({
       next: (response) => {
-/*         localStorage.setItem('token', response.data.Token);
-        console.log('Inicio de sesión exitoso:', response);
-              console.log('Este es mi token:', response.data.Token); */
+
         this.router.navigate(['home']);
       },
       error: (error) => {

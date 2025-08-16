@@ -15,6 +15,7 @@ export class ButtonComponent {
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() title?: string;
 
+  @Input() type: 'button' | 'submit' | 'reset' = 'button';
   @Output() clicked = new EventEmitter<void>();
 
 

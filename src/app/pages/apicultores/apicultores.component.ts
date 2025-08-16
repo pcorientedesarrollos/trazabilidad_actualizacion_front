@@ -6,16 +6,18 @@ import { TableComponent } from "../../components/table/table.component";
 import { PaginacionComponent } from "../../components/paginacion/paginacion.component";
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from "../../components/button/button.component";
+import { ModalComponent } from "../../components/modal/modal.component";
 
 @Component({
   selector: 'app-apicultores',
-  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent],
+  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent,  ModalComponent],
   templateUrl: './apicultores.component.html',
   styleUrl: './apicultores.component.css'
 })
 export class ApicultoresComponent {
   searchTerm = '';
   paginaActual = 1;
+  isModalAddOpen = false;
   elementosPorPagina = 7; 
   estadoFiltro: string = 'todos';
 
@@ -36,6 +38,7 @@ export class ApicultoresComponent {
   { nombre: 'Gloria Bacells', acopiador: 'Emiliano Vargas', apiarios: 15, colmenas: 45, activo: false },
   { nombre: 'Juliana Dominguez', acopiador: 'Valeria Gomez', apiarios: 15, colmenas: 45, activo: true },
 ];
+
 
 
   get totalPaginas(): number {
@@ -83,12 +86,21 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
     console.log('Descargando archivo...');
   }
 
-  onAdd() {
-    console.log('Agregando nuevo apicultor...');
+    openModal() {
+    this.isModalAddOpen = true;
   }
+
+  closeModal() {
+    this.isModalAddOpen = false;
+  }
+
 
   editar(apicultor: any) {
     console.log('Editar', apicultor);
+  }
+
+  addApicultor(){
+    console.log('Añadir apicultor')
   }
 
   ver(apicultor: any) {
