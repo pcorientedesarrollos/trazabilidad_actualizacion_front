@@ -5,7 +5,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FooterComponent } from '../../components/footer/footer.component';
-import { HttpClientModule } from '@angular/common/http';
 import { LoginService } from './service/login.service';
 import { Login } from './interface/login.interface';
 
@@ -13,7 +12,7 @@ import { Login } from './interface/login.interface';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FooterComponent, CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [FooterComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -40,8 +39,6 @@ export class LoginComponent {
         this.router.navigate(['home']);
       },
       error: (error) => {
-        // Manejo de errores
-        console.error('Error al iniciar sesión:', error);
         alert('Usuario o contraseña incorrectos');
       }
     });

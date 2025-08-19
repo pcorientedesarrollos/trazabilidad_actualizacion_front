@@ -1,10 +1,13 @@
 <button
 [type]="type"
+
   [ngClass]="[bgColor, hoverColor, sizeClasses, 'text-white', 'flex', 'items-center', 'gap-2', 'rounded-xl']"
   (click)="clicked.emit()"
   [attr.title]="title"
 >
-  <ng-content select="[icon]"></ng-content>  
-  {{ label }}
+  <span *ngIf="icon" class="material-symbols-outlined" [ngClass]="iconColor">
+    {{ icon }}
+  </span>
+<span [ngClass]="[labelColor, font]">{{ label }}</span>
 </button>
 

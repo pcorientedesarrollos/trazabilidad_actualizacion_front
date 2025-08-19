@@ -19,14 +19,13 @@
 
 
     <div class="flex gap-8 mt-4 mr-6 ">
-      <app-button label="Descargar" [title]="'Descargar datos'" [bgColor]="'bg-green-600'"
+      <app-button label="Descargar" [title]="'Descargar datos'" [bgColor]="'bg-green-600'"   icon="sim_card_download" [labelColor]="'text-white'"
         [hoverColor]="'hover:bg-green-700'" [size]="'md'" (clicked)="onDownload()">
-        <span icon class="material-symbols-outlined">sim_card_download</span>
+
       </app-button>
 
-      <app-button label="Agregar" [title]="'Agregar Apicultores'" [bgColor]="'bg-yellow-500'"
+      <app-button label="Agregar" [title]="'Agregar Apicultores'" [bgColor]="'bg-yellow-500'"  icon="add_2" [labelColor]="'text-white'"
         [hoverColor]="'hover:bg-yellow-700'" [size]="'md'" (click)="openModal()">
-        <span icon class="material-symbols-outlined">add_2</span>
       </app-button>
     </div>
   </div>
@@ -74,17 +73,19 @@
     </h3>
 
     <form>
-       <div>
-          <label class="block text-gray-800 mb-1" for="nombre">Nombre:</label>
-          <input type="text" placeholder="Nombre" class="w-full p-2 border border-gray-400 rounded mb-2 text-gray-600" required />
-       </div>
+      <div>
+        <label class="block text-gray-800 mb-1" for="nombre">Nombre:</label>
+        <input type="text" placeholder="Nombre" class="w-full p-2 border border-gray-400 rounded mb-2 text-gray-600"
+          required />
+      </div>
 
-       <div>
-        <label class ="block text-gray-800" for="curp">Curp:</label>
-        <input type="text" placeholder="Curp" class="w-full p-2 border border-gray-400 rounded mb-2 text-gray-600" required />
-       </div>
-       
-      
+      <div>
+        <label class="block text-gray-800" for="curp">Curp:</label>
+        <input type="text" placeholder="Curp" class="w-full p-2 border border-gray-400 rounded mb-2 text-gray-600"
+          required />
+      </div>
+
+
       <!-- Botón de acción -->
       <app-button label="Guardar" [type]="'submit'" [title]="'Guardar Apicultor'" [bgColor]="'bg-yellow-500'"
         [hoverColor]="'hover:bg-yellow-700'" [size]="'sm'" (clicked)="addApicultor()">

@@ -8,14 +8,20 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './button.component.css'
 })
 export class ButtonComponent {
-    @Input() label: string = 'Botón';
-  @Input() icon?: string; // Nombre del ícono de Material Symbols
-  @Input() bgColor: string = 'bg-green-600';
-  @Input() hoverColor: string = 'hover:bg-green-700';
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
+    @Input() label?: string = 'Botón';
+  @Input() labelColor?: string = 'text-gray-700';
+  @Input() icon?: string; 
+  @Input() bgColor?: string = 'bg-green-600';
+  @Input() hoverColor?: string = 'hover:bg-green-700';
+  @Input() size?: 'sm' | 'md' | 'lg' = 'md';
   @Input() title?: string;
+@Input() iconColor?: string = 'text-white'; 
+@Input() font?: string = 'font-semibold';
 
-  @Input() type: 'button' | 'submit' | 'reset' = 'button';
+
+
+
+  @Input() type?: 'button' | 'submit' | 'reset' = 'button';
   @Output() clicked = new EventEmitter<void>();
 
 
