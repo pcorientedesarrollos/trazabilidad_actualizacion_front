@@ -4,5 +4,7 @@ export const enviroment = {
 }
 
 export const path ={
-  auth : 'auth/login'
+  auth : 'auth/login',
+  apiculrores: 'apicultores/vista'
+  
 }

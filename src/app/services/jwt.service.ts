@@ -8,8 +8,8 @@ export class JwtService {
     constructor() { }
 
     setToken(token: string, usuario: string) {
-        const encryptedToken = btoa(token);
-        localStorage.setItem('token', encryptedToken);
+        /*   const encryptedToken = btoa(token); */
+        localStorage.setItem('token', token);
         localStorage.setItem('usuario', usuario);
     }
 
@@ -21,7 +21,7 @@ export class JwtService {
         return localStorage.getItem('token');
 
     }
-    deleteToken(){
+    deleteToken() {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
     }

@@ -35,7 +35,6 @@ export class LoginComponent {
 
     this.service.login(data).subscribe({
       next: (response) => {
-
         this.router.navigate(['home']);
       },
       error: (error) => {
