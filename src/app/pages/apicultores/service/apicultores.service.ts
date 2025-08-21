@@ -28,6 +28,16 @@ export class ApicultoresService {
     return this.http.get<Apicultor[]>(`${this.apiUrl}${this.path}`, { headers });
   }
 
+  bajaApicultores(): Observable<any> {
+    const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
+    return this.http.get<any>(`${this.apiUrl}${this.path}/baja`, { headers });
+  }
+
+
 }
 
 

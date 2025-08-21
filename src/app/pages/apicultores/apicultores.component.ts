@@ -20,8 +20,6 @@ export class ApicultoresComponent {
 
   constructor(private apicultorService: ApicultoresService) {}
 
-
-
   searchTerm = '';
   paginaActual = 1;
   isModalAddOpen = false;
@@ -33,7 +31,7 @@ columnas = [
   { label: 'Acopiador Afiliado', key: 'acopiadorAfiliado', align: 'center' },
   { label: 'N° Apiarios', key: 'totalApiarios', align: 'center' },
   { label: 'N° Colmenas', key: 'totalColmenas', align: 'center' },
-  { label: 'Estatus', key: 'estatus', align: 'center' } // 👈 agregado aquí
+  { label: 'Estatus', key: 'estatus', align: 'center' } 
 ];
 
 
@@ -43,20 +41,6 @@ columnas = [
     this.obtenerApicultores();
   }
 
-  obtenerApicultores() {
-  this.apicultorService.getAllApicultores().subscribe({
-  next: (data: Apicultor[]) => {
-    console.log(data)
-  this.apicultores = data.map((a: Apicultor) => ({
-    ...a,
-     activo: a.estatus.toLowerCase() === 'activo',
-  }));
-},
-    error: (err: any) => {
-      console.error('Error al obtener apicultores', err);
-    }
-  });
-}
 
   get totalPaginas(): number {
     return Math.ceil(this.filtrados.length / this.elementosPorPagina);
@@ -80,15 +64,12 @@ get filtrados() {
     });
 }
 
-
-
 cambiarEstado(apicultor: any, nuevoEstado: boolean) {
   apicultor.activo = nuevoEstado;
   console.log(`${nuevoEstado ? 'Activado' : 'Inactivado'} apicultor:`, apicultor);
 
   this.paginaActual = 1; 
 }
-
 
   get paginados() {
     const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
@@ -116,6 +97,21 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
     this.isModalAddOpen = false;
   }
 
+  
+  obtenerApicultores() {
+  this.apicultorService.getAllApicultores().subscribe({
+  next: (data: Apicultor[]) => {
+    console.log(data)
+  this.apicultores = data.map((a: Apicultor) => ({
+    ...a,
+     activo: a.estatus.toLowerCase() === 'activo',
+  }));
+},
+    error: (err: any) => {
+      console.error('Error al obtener apicultores', err);
+    }
+  });
+}
 
   editar(apicultor: any) {
     console.log('Editar', apicultor);
@@ -125,11 +121,8 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
     console.log('Añadir apicultor')
   }
 
-  ver(apicultor: any) {
-    console.log('Ver', apicultor);
-  }
 
-  eliminar(apicultor: any) {
+  baja(apicultor: any) {
     console.log('Eliminar', apicultor);
   }
 
