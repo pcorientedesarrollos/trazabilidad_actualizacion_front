@@ -30,9 +30,6 @@
     </div>
   </div>
 
-
-
-
   <!-- Tabla de Apicultores -->
   <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
 
@@ -93,5 +90,18 @@
     </form>
 
   </app-modal>
+
+<app-alert
+  [show]="isAlertOpen"
+  [icon]="accionModal === 'alta' ? 'check_circle' : 'highlight_off'"
+  [iconColor]="accionModal === 'alta' ? 'text-green-500' : 'text-red-500'"
+  [title]="accionModal === 'alta' ? 'Alta Apicultor' : 'Baja Apicultor'"
+  [message]="alertMessage"
+  [confirmText]="'Sí, confirmar'"
+  [cancelText]="'Cancelar'"
+  (confirm)="confirmarCambioEstado()"
+  (cancel)="cancelarCambioEstado()">
+</app-alert>
+
 
 </div>

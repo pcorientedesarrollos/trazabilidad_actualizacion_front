@@ -5,6 +5,9 @@ export const enviroment = {
 
 export const path ={
   auth : 'auth/login',
-  apiculrores: 'apicultores/vista'
+  apiculrores: 'apicultores/vista',
+  apicultoresBaja:'apicultores/baja',
+  apicultoresActivar:'apicultores/activar',
+  
   
 }

@@ -1,3 +1,24 @@
+<div *ngIf="show" class="fixed inset-0 z-50 flex items-center justify-center">
+  <div class="bg-white  rounded-lg shadow p-6 w-full max-w-md">
+    <button (click)="close()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+      ✕
+    </button>
+    
 
-<button (click)="showAlert()">Mostrar alerta</button>
+    <div class="text-center">
+     <span *ngIf="icon" class="material-symbols-outlined block mx-auto mb-4" [ngClass]="iconColor" style="font-size: 3rem;">
+  {{ icon }}
+</span>
+      <h3 class="mb-5 text-lg font-normal text-gray-700 dark:text-gray-700">{{ title }}</h3>
+      <p class="mb-5 text-gray-700 dark:text-gray-700">{{ message }}</p>
+
+   <button (click)="confirmAction()" class="text-white bg-yellow-500 hover:bg-yellow-600 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5">
+  {{ confirmText }}
+</button>
+<button (click)="close()" class="ml-3 text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5">
+  {{ cancelText }}
+</button>
+    </div>
+  </div>
+</div>
 

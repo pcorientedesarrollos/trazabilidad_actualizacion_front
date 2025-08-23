@@ -1,18 +1,31 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-alert',
+  imports: [CommonModule],
   templateUrl: './alert.component.html',
   styleUrl: './alert.component.css'
 })
 export class AlertComponent {
-  showAlert() {
-    Swal.fire({
-      title: '¡Alerta!',
-      text: 'Este es un mensaje de SweetAlert2.',
-      icon: 'success',
-      confirmButtonText: 'Aceptar'
-    });
+   @Input() show ? = false;
+  @Input() title? = 'Confirm';
+  @Input() message ?= 'Are you sure you want to proceed?';
+  @Input() confirmText? = 'Yes';
+  @Input() cancelText ? = 'Cancel';
+  @Input() icon?: string = 'Warning';
+  @Input() iconColor: string = '';
+
+  @Output() confirm = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
+
+  close() {
+    this.cancel.emit();
   }
+
+  confirmAction() {
+    this.confirm.emit();
+  }
+
 }

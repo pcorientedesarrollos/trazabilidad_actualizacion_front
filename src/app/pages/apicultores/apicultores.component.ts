@@ -9,10 +9,12 @@ import { ButtonComponent } from "../../components/button/button.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { Apicultor } from './interface/apicultores.interface';
 import { ApicultoresService } from './service/apicultores.service';
+import { AlertComponent } from "../../components/alert/alert.component";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-apicultores',
-  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent,  ModalComponent],
+  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent, ModalComponent, AlertComponent],
   templateUrl: './apicultores.component.html',
   styleUrl: './apicultores.component.css'
 })
@@ -23,8 +25,13 @@ export class ApicultoresComponent {
   searchTerm = '';
   paginaActual = 1;
   isModalAddOpen = false;
+  isAlertOpen = false;
   elementosPorPagina = 7; 
   estadoFiltro: string = 'todos';
+  apicultorSeleccionado: any = null;
+alertMessage = '';
+accionModal: 'alta' | 'baja' | null = null;
+
 
 columnas = [
   { label: 'Nombre Apicultor', key: 'apicultor', align: 'center' },
@@ -65,65 +72,141 @@ get filtrados() {
 }
 
 cambiarEstado(apicultor: any, nuevoEstado: boolean) {
-  apicultor.activo = nuevoEstado;
-  console.log(`${nuevoEstado ? 'Activado' : 'Inactivado'} apicultor:`, apicultor);
-
-  this.paginaActual = 1; 
+  this.apicultorSeleccionado = apicultor;
+  this.alertMessage = `¿Estás seguro que deseas ${nuevoEstado ? 'activar' : 'dar de baja'} a este apicultor?`;
+  this.accionModal = nuevoEstado ? 'alta' : 'baja';
+  this.isAlertOpen = true;
 }
+
+
+
 
   get paginados() {
     const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
     return this.filtrados.slice(inicio, inicio + this.elementosPorPagina);
   }
-
   cambiarPagina(nuevaPagina: number) {
     this.paginaActual = nuevaPagina;
   }
-
   onSearchChange(term: string) {
     this.searchTerm = term;
     this.paginaActual = 1; 
   }
-
   onDownload() {
     console.log('Descargando archivo...');
   }
-
     openModal() {
     this.isModalAddOpen = true;
   }
-
   closeModal() {
     this.isModalAddOpen = false;
   }
 
-  
-  obtenerApicultores() {
+obtenerApicultores() {
   this.apicultorService.getAllApicultores().subscribe({
-  next: (data: Apicultor[]) => {
-    console.log(data)
-  this.apicultores = data.map((a: Apicultor) => ({
-    ...a,
-     activo: a.estatus.toLowerCase() === 'activo',
-  }));
-},
+    next: (data: Apicultor[]) => {
+
+      this.apicultores = data.map((a: Apicultor) => ({
+        ...a,
+        activo: a.estatus.toLowerCase() === 'activo',
+      }));
+
+    },
     error: (err: any) => {
       console.error('Error al obtener apicultores', err);
     }
   });
 }
-
   editar(apicultor: any) {
     console.log('Editar', apicultor);
   }
-
   addApicultor(){
     console.log('Añadir apicultor')
   }
 
 
-  baja(apicultor: any) {
-    console.log('Eliminar', apicultor);
+  baja(idApicultor: number) {
+    this.apicultorService.bajaApicultores(idApicultor).subscribe({
+      next: (response) => {
+        console.log('Apicultor dado de baja:', response);
+        this.isAlertOpen = false;
+        this.obtenerApicultores(); 
+      },
+      error: (error) => {
+        console.error('Error al dar de baja el apicultor:', error);
+      }
+    });
+
   }
+activar(idApicultor: number) {
+  this.apicultorService.activarApicultores(idApicultor).subscribe({
+    next: (response) => {
+      console.log('Apicultor activado:', response);
+
+      this.isAlertOpen = false;
+      this.obtenerApicultores();
+    },
+    error: (error) => {
+      console.error('Error al activar el apicultor:', error);
+    }
+  });
+}
+
+confirmarCambioEstado() {
+  if (!this.apicultorSeleccionado || !this.accionModal) return;
+
+  if (this.accionModal === 'alta') {
+    this.apicultorService.activarApicultores(this.apicultorSeleccionado.idApicultor).subscribe({
+      next: (response) => {
+          Swal.fire({
+      title: '¡Alerta!',
+      text: response.mensaje,
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    });
+        this.obtenerApicultores(); 
+      },
+      error: (err) => {
+        console.error('Error al activar:', err);
+            Swal.fire({
+      title: '¡Alerta!',
+      text: err,
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+      }
+    });
+  } else if (this.accionModal === 'baja') {
+    this.apicultorService.bajaApicultores(this.apicultorSeleccionado.idApicultor).subscribe({
+      next: (response) => {
+             Swal.fire({
+      title: '¡Alerta!',
+      text: response.mensaje,
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    });
+        this.obtenerApicultores(); // Refresca tabla
+      },
+      error: (err) => {
+           Swal.fire({
+      title: '¡Alerta!',
+      text: err,
+      icon: 'error',
+      confirmButtonText: 'Aceptar'
+    });
+      }
+    });
+  }
+
+  this.isAlertOpen = false;
+  this.accionModal = null;
+}
+
+
+cancelarCambioEstado() {
+  this.isAlertOpen = false;
+  this.accionModal = null;
+}
+
 
 }
