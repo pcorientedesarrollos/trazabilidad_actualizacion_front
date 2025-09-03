@@ -43,11 +43,23 @@ columnas = [
 
 
   apicultores: any[] = [];
+  acopiadores = [
+  { id: 1, nombre: 'Juan Pérez' },
+  { id: 2, nombre: 'María López' },
+  { id: 3, nombre: 'Carlos Ramírez' },
+];
+
+apicultor = {
+  // propiedades del apicultor
+  acopiador: '',
+};
+
+
+
 
   ngOnInit(): void {
     this.obtenerApicultores();
   }
-
 
   get totalPaginas(): number {
     return Math.ceil(this.filtrados.length / this.elementosPorPagina);
@@ -77,9 +89,6 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
   this.accionModal = nuevoEstado ? 'alta' : 'baja';
   this.isAlertOpen = true;
 }
-
-
-
 
   get paginados() {
     const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
@@ -125,33 +134,6 @@ obtenerApicultores() {
   }
 
 
-  baja(idApicultor: number) {
-    this.apicultorService.bajaApicultores(idApicultor).subscribe({
-      next: (response) => {
-        console.log('Apicultor dado de baja:', response);
-        this.isAlertOpen = false;
-        this.obtenerApicultores(); 
-      },
-      error: (error) => {
-        console.error('Error al dar de baja el apicultor:', error);
-      }
-    });
-
-  }
-activar(idApicultor: number) {
-  this.apicultorService.activarApicultores(idApicultor).subscribe({
-    next: (response) => {
-      console.log('Apicultor activado:', response);
-
-      this.isAlertOpen = false;
-      this.obtenerApicultores();
-    },
-    error: (error) => {
-      console.error('Error al activar el apicultor:', error);
-    }
-  });
-}
-
 confirmarCambioEstado() {
   if (!this.apicultorSeleccionado || !this.accionModal) return;
 
@@ -170,7 +152,7 @@ confirmarCambioEstado() {
         console.error('Error al activar:', err);
             Swal.fire({
       title: '¡Alerta!',
-      text: err,
+      text: 'Algo malo ocurrió',
       icon: 'error',
       confirmButtonText: 'Aceptar'
     });
@@ -185,12 +167,12 @@ confirmarCambioEstado() {
       icon: 'success',
       confirmButtonText: 'Aceptar'
     });
-        this.obtenerApicultores(); // Refresca tabla
+        this.obtenerApicultores(); 
       },
       error: (err) => {
            Swal.fire({
       title: '¡Alerta!',
-      text: err,
+      text:'Algo malo ocurrió',
       icon: 'error',
       confirmButtonText: 'Aceptar'
     });
@@ -201,7 +183,6 @@ confirmarCambioEstado() {
   this.isAlertOpen = false;
   this.accionModal = null;
 }
-
 
 cancelarCambioEstado() {
   this.isAlertOpen = false;
