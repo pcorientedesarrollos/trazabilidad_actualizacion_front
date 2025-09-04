@@ -68,7 +68,7 @@
   (closeModal)="closeModal()"
   [title]="'Agregar Apicultor'"
 >
-  <form (ngSubmit)="addApicultor()" class="space-y-4">
+  <form [formGroup]="agregarApicultorForm" (ngSubmit)="agregarApicultor()" class="space-y-4">
 
     <!-- Contenedor grid para los campos -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -80,6 +80,7 @@
           type="text"
           id="nombre"
           placeholder="Nombre"
+          formControlName="nombre"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
           required
         />
@@ -91,6 +92,7 @@
           type="text"
           id="curp"
           placeholder="CURP"
+          formControlName="curp"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
           required
         />
@@ -102,19 +104,20 @@
           type="text"
           id="rfc"
           placeholder="RFC"
+           formControlName="rfc"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
 
-      <div>
-        <label for="alta" class="block text-gray-800 mb-1 font-medium">Alta:</label>
-        <input
-          type="text"
-          id="alta"
-          placeholder="Alta"
-          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
-        />
-      </div>
+    <div>
+  <label for="alta" class="block text-gray-800 mb-1 font-medium">Alta:</label>
+  <input
+    type="datetime-local"
+    id="alta"
+    formControlName="alta"
+    class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
+  />
+</div>
 
       <div>
         <label for="direccion" class="block text-gray-800 mb-1 font-medium">Dirección:</label>
@@ -122,6 +125,7 @@
           type="text"
           id="direccion"
           placeholder="Dirección"
+           formControlName="direccion"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
@@ -132,6 +136,7 @@
           type="text"
           id="estadoCodigo"
           placeholder="Estado Código"
+          formControlName="estadoCodigo"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
@@ -141,7 +146,9 @@
         <input
           type="text"
           id="municipio"
-          placeholder="Municipio"
+          placeholder="Ej: 001"
+          formControlName="municipioCodigo"
+          maxlength="3"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
@@ -152,6 +159,7 @@
           type="number"
           id="senasica"
           placeholder="SENASICA"
+          formControlName="senasica"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
@@ -162,6 +170,7 @@
           type="text"
           id="ippSiniga"
           placeholder="IPP SINIGA"
+          formControlName="ippSiniga"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
@@ -172,6 +181,7 @@
           type="text"
           id="codigo"
           placeholder="Código"
+          formControlName="codigo"
           class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
         />
       </div>
@@ -180,17 +190,16 @@
       <div>
         <label for="acopiador" class="block text-gray-800 mb-1 font-medium">Asignar Acopiador:</label>
         <select
-          id="acopiador"
-          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
-          [(ngModel)]="apicultor.acopiador"
-          name="acopiador"
-          required
-        >
-          <option value="" disabled selected>Selecciona un acopiador</option>
-          <option *ngFor="let acopiador of acopiadores" [value]="acopiador.id">
-            {{ acopiador.nombre }}
-          </option>
-        </select>
+  id="acopiador"
+  formControlName="idProveedor"
+  class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
+  required
+>
+  <option value="" disabled selected>Selecciona un acopiador</option>
+  <option *ngFor="let acopiador of acopiadores" [value]="acopiador.idAcopiador">
+    {{ acopiador.acopiador }}
+  </option>
+</select>
       </div>
     </div>
 

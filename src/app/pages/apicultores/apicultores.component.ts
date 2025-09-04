@@ -1,26 +1,44 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Inject, Input, Output } from '@angular/core';
 import { FooterComponent } from "../../components/footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from "../../components/search-bar/search-bar.component";
 import { TableComponent } from "../../components/table/table.component";
 import { PaginacionComponent } from "../../components/paginacion/paginacion.component";
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from "../../components/button/button.component";
 import { ModalComponent } from "../../components/modal/modal.component";
 import { Apicultor } from './interface/apicultores.interface';
 import { ApicultoresService } from './service/apicultores.service';
 import { AlertComponent } from "../../components/alert/alert.component";
 import Swal from 'sweetalert2';
+import { Acopiador } from './interface/acopiadores.interface';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-apicultores',
-  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent, ModalComponent, AlertComponent],
+  imports: [FooterComponent, CommonModule, SearchBarComponent, TableComponent, PaginacionComponent, FormsModule, ButtonComponent, ModalComponent, AlertComponent, ReactiveFormsModule],
   templateUrl: './apicultores.component.html',
   styleUrl: './apicultores.component.css'
 })
 export class ApicultoresComponent {
-
+   
+   public fb = inject(FormBuilder);
   constructor(private apicultorService: ApicultoresService) {}
+
+    public agregarApicultorForm = this.fb.group({
+      nombre: ['', Validators.required],
+      curp: ['', Validators.required],
+      rfc: [''],
+      alta: ['', Validators.required],
+      direccion: [''],
+      estadoCodigo: [''],
+      municipioCodigo: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      senasica: [''],
+      ippSiniga: [''],
+      codigo: [''],
+      idProveedor: ['', Validators.required]
+  });
+
 
   searchTerm = '';
   paginaActual = 1;
@@ -43,22 +61,18 @@ columnas = [
 
 
   apicultores: any[] = [];
-  acopiadores = [
-  { id: 1, nombre: 'Juan Pérez' },
-  { id: 2, nombre: 'María López' },
-  { id: 3, nombre: 'Carlos Ramírez' },
-];
+acopiadores: Acopiador[] = [];
+
 
 apicultor = {
-  // propiedades del apicultor
   acopiador: '',
 };
 
 
 
-
   ngOnInit(): void {
     this.obtenerApicultores();
+    this.obtenerAcopiadores();
   }
 
   get totalPaginas(): number {
@@ -105,6 +119,10 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
     console.log('Descargando archivo...');
   }
     openModal() {
+      const ahora = new Date();
+  const iso = ahora.toISOString().slice(0, 16); 
+  this.agregarApicultorForm.patchValue({ alta: iso });
+
     this.isModalAddOpen = true;
   }
   closeModal() {
@@ -126,12 +144,73 @@ obtenerApicultores() {
     }
   });
 }
+obtenerAcopiadores() {
+  this.apicultorService.getAllAcopiadores().subscribe({
+    next: (data) => {
+      this.acopiadores = data;
+    },
+    error: (err) => {
+      console.error('Error al obtener acopiadores', err);
+    }
+  });
+}
+
+
   editar(apicultor: any) {
     console.log('Editar', apicultor);
   }
-  addApicultor(){
-    console.log('Añadir apicultor')
+ agregarApicultor() {
+  if (this.agregarApicultorForm.invalid) {
+    this.agregarApicultorForm.markAllAsTouched();
+    return;
   }
+
+  const formData = this.agregarApicultorForm.value;
+  const idProveedorStr = formData.idProveedor;
+ if (!idProveedorStr || isNaN(Number(idProveedorStr))) {
+  Swal.fire('Error', 'El acopiador seleccionado es inválido.', 'error');
+  return;
+}
+
+const idProveedor = parseInt(idProveedorStr, 10);
+
+
+  if (formData.alta) {
+  const fechaAlta = new Date(formData.alta);
+  formData.alta = fechaAlta.toISOString(); 
+}
+
+   console.log(formData)
+        console.log(idProveedor)
+ 
+
+/*   this.apicultorService.agregarApicultor(formData).subscribe({
+    next: (res: any) => {
+      console.log(formData)
+        console.log(idProveedor)
+       if (typeof  idProveedor === 'number') {
+        this.apicultorService.asignarAcopiador(this.apicultorSeleccionado.idApicultor,  idProveedor).subscribe({
+          next: () => {
+            Swal.fire('Éxito', 'Apicultor creado y acopiador asignado.', 'success');
+            this.obtenerApicultores();
+            this.closeModal();
+            this.agregarApicultorForm.reset();
+          },
+          error: (err) => {
+            console.error('Error al asignar acopiador:', err);
+            Swal.fire('Error', 'Apicultor creado, pero no se pudo asignar el acopiador.', 'error');
+          }
+        });
+      } else {
+        Swal.fire('Error', 'No se pudo asignar el acopiador porque el valor es inválido.', 'error');
+      } 
+    },
+    error: (err) => {
+      console.error('Error al agregar apicultor:', err);
+      Swal.fire('Error', 'No se pudo agregar el apicultor.', 'error');
+    }
+  });  */
+}
 
 
 confirmarCambioEstado() {

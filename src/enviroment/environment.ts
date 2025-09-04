@@ -5,9 +5,11 @@ export const enviroment = {
 
 export const path ={
   auth : 'auth/login',
-  apiculrores: 'apicultores/vista',
+  apicultores: 'apicultores/vista',
   apicultoresBaja:'apicultores/baja',
   apicultoresActivar:'apicultores/activar',
-  
+  acopiadores : 'acopiadores',
+  asigAcopiadorApicultor: 'asignacion-acopiador-apicultor-',
+  addApicultor: 'apicultores'
   
 }

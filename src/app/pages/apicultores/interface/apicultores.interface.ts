@@ -1,4 +1,5 @@
 export interface Apicultor {
+  idProveedor:number
   idApicultor: number;
   apicultor: string;
   acopiadorAfiliado: string;
