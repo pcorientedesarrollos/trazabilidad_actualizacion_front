@@ -25,19 +25,20 @@ export class ApicultoresComponent {
    public fb = inject(FormBuilder);
   constructor(private apicultorService: ApicultoresService) {}
 
-    public agregarApicultorForm = this.fb.group({
-      nombre: ['', Validators.required],
-      curp: ['', Validators.required],
-      rfc: [''],
-      alta: ['', Validators.required],
-      direccion: [''],
-      estadoCodigo: [''],
-      municipioCodigo: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-      senasica: [''],
-      ippSiniga: [''],
-      codigo: [''],
-      idProveedor: ['', Validators.required]
-  });
+ public agregarApicultorForm = this.fb.group({
+  nombre: ['', Validators.required],
+  CURP: ['', Validators.required],
+  RFC: [''],
+  alta: ['', Validators.required],
+  direccion: [''],
+  estado_codigo: [''],
+  municipio_codigo: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+  Senasica: [''],
+  IPPSiniga: [''],
+  codigo: [''],
+  idProveedor: ['', Validators.required],
+  estatus: ['Activo'] // 
+});
 
 
   searchTerm = '';
@@ -133,10 +134,16 @@ obtenerApicultores() {
   this.apicultorService.getAllApicultores().subscribe({
     next: (data: Apicultor[]) => {
 
-      this.apicultores = data.map((a: Apicultor) => ({
-        ...a,
-        activo: a.estatus.toLowerCase() === 'activo',
-      }));
+   this.apicultores = data.map((a: Apicultor) => ({
+  ...a,
+  activo: a.estatus.toLowerCase() === 'activo',
+  apicultor: a.nombre, 
+  acopiadorAfiliado: a.nombreProovedor,
+  totalApiarios: 0, 
+  totalColmenas: 0,
+}));
+
+     
 
     },
     error: (err: any) => {
@@ -184,12 +191,15 @@ const idProveedor = parseInt(idProveedorStr, 10);
         console.log(idProveedor)
  
 
-/*   this.apicultorService.agregarApicultor(formData).subscribe({
+  this.apicultorService.agregarApicultor(formData).subscribe({
     next: (res: any) => {
       console.log(formData)
         console.log(idProveedor)
+        console.log('IdApicultor',res.data.idApicultor);
+          const idApicultorCreado = res?.data.idApicultor;
+          console.log(idApicultorCreado);
        if (typeof  idProveedor === 'number') {
-        this.apicultorService.asignarAcopiador(this.apicultorSeleccionado.idApicultor,  idProveedor).subscribe({
+        this.apicultorService.asignarAcopiador(idApicultorCreado,  idProveedor).subscribe({
           next: () => {
             Swal.fire('Éxito', 'Apicultor creado y acopiador asignado.', 'success');
             this.obtenerApicultores();
@@ -200,7 +210,7 @@ const idProveedor = parseInt(idProveedorStr, 10);
             console.error('Error al asignar acopiador:', err);
             Swal.fire('Error', 'Apicultor creado, pero no se pudo asignar el acopiador.', 'error');
           }
-        });
+        }); 
       } else {
         Swal.fire('Error', 'No se pudo asignar el acopiador porque el valor es inválido.', 'error');
       } 
@@ -209,7 +219,7 @@ const idProveedor = parseInt(idProveedorStr, 10);
       console.error('Error al agregar apicultor:', err);
       Swal.fire('Error', 'No se pudo agregar el apicultor.', 'error');
     }
-  });  */
+  });  
 }
 
 
