@@ -13,6 +13,7 @@ import { AlertComponent } from "../../components/alert/alert.component";
 import Swal from 'sweetalert2';
 import { Acopiador } from './interface/acopiadores.interface';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ExcelService } from '../../services/excel.service';
 
 @Component({
   selector: 'app-apicultores',
@@ -23,9 +24,24 @@ import { ReactiveFormsModule } from '@angular/forms';
 export class ApicultoresComponent {
    
    public fb = inject(FormBuilder);
-  constructor(private apicultorService: ApicultoresService) {}
+  constructor(private apicultorService: ApicultoresService, private exelService : ExcelService) {}
 
  public agregarApicultorForm = this.fb.group({
+  nombre: ['', Validators.required],
+  CURP: ['', Validators.required],
+  RFC: [''],
+  alta: ['', Validators.required],
+  direccion: [''],
+  estado_codigo: [''],
+  municipio_codigo: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+  Senasica: [''],
+  IPPSiniga: [''],
+  codigo: [''],
+  idProveedor: ['', Validators.required],
+  estatus: ['Activo'] // 
+});
+
+ public actualizarApicultorForm = this.fb.group({
   nombre: ['', Validators.required],
   CURP: ['', Validators.required],
   RFC: [''],
@@ -44,12 +60,14 @@ export class ApicultoresComponent {
   searchTerm = '';
   paginaActual = 1;
   isModalAddOpen = false;
+  isModalUpdateOpen = false;
   isAlertOpen = false;
   elementosPorPagina = 7; 
   estadoFiltro: string = 'todos';
   apicultorSeleccionado: any = null;
 alertMessage = '';
-accionModal: 'alta' | 'baja' | null = null;
+accionModal: 'alta' | 'baja' | 'update' | null = null;
+
 
 
 columnas = [
@@ -116,8 +134,11 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
     this.searchTerm = term;
     this.paginaActual = 1; 
   }
-  onDownload() {
-    console.log('Descargando archivo...');
+  ExelDownload() {
+     const data = this.filtrados;
+  const nombreArchivo = 'apicultores';
+
+    this.exelService.exportAsExcelFile(data, nombreArchivo)
   }
     openModal() {
       const ahora = new Date();
@@ -126,8 +147,35 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
 
     this.isModalAddOpen = true;
   }
+
+updateModal(apicultor: any) {
+  this.apicultorSeleccionado = apicultor;
+
+  this.actualizarApicultorForm.patchValue({
+    nombre: apicultor.nombre,
+    CURP: apicultor.CURP,
+    RFC: apicultor.RFC,
+    alta: new Date(apicultor.alta).toISOString().slice(0, 16),
+    direccion: apicultor.direccion,
+    estado_codigo: apicultor.estado_codigo,
+    municipio_codigo: apicultor.municipio_codigo,
+    Senasica: apicultor.Senasica,
+    IPPSiniga: apicultor.IPPSiniga,
+    codigo: apicultor.codigo,
+      idProveedor: apicultor.idProveedor,
+       estatus: apicultor.estatus
+
+  });
+
+  this.isModalUpdateOpen = true;
+}
+
   closeModal() {
     this.isModalAddOpen = false;
+  }
+
+   closeModalUpdate() {
+    this.isModalUpdateOpen = false;
   }
 
 obtenerApicultores() {
@@ -162,64 +210,77 @@ obtenerAcopiadores() {
   });
 }
 
+editarApicultor() {
+  if (this.actualizarApicultorForm.invalid) return;
 
-  editar(apicultor: any) {
-    console.log('Editar', apicultor);
+  const dataActualizada = this.actualizarApicultorForm.value;
+  const idApicultor = this.apicultorSeleccionado?.idApicultor;
+ console.log(dataActualizada)
+  console.log(idApicultor ) 
+
+this.apicultorService.updateApicultor(idApicultor, dataActualizada).subscribe({
+  next: () => {
+       Swal.fire('Éxito', 'Apicultor actualizado con exito.', 'success');
+    this.accionModal = 'update';  
+    this.isModalUpdateOpen = false;
+    this.obtenerApicultores();
+  },
+  error: (err) => {
+    console.error("Error al actualizar:", err);
+     Swal.fire('Error', 'Apicultor actualizado', 'error');
+
   }
- agregarApicultor() {
+});
+}
+
+agregarApicultor() {
   if (this.agregarApicultorForm.invalid) {
     this.agregarApicultorForm.markAllAsTouched();
     return;
   }
 
   const formData = this.agregarApicultorForm.value;
+
   const idProveedorStr = formData.idProveedor;
- if (!idProveedorStr || isNaN(Number(idProveedorStr))) {
-  Swal.fire('Error', 'El acopiador seleccionado es inválido.', 'error');
-  return;
-}
+  if (!idProveedorStr || isNaN(Number(idProveedorStr))) {
+    Swal.fire('Error', 'Debes seleccionar un acopiador válido antes de continuar.', 'error');
+    return;
+  }
 
-const idProveedor = parseInt(idProveedorStr, 10);
-
+  const idProveedor = parseInt(idProveedorStr, 10);
 
   if (formData.alta) {
-  const fechaAlta = new Date(formData.alta);
-  formData.alta = fechaAlta.toISOString(); 
-}
-
-   console.log(formData)
-        console.log(idProveedor)
- 
+    const fechaAlta = new Date(formData.alta);
+    formData.alta = fechaAlta.toISOString();
+  }
 
   this.apicultorService.agregarApicultor(formData).subscribe({
     next: (res: any) => {
-      console.log(formData)
-        console.log(idProveedor)
-        console.log('IdApicultor',res.data.idApicultor);
-          const idApicultorCreado = res?.data.idApicultor;
-          console.log(idApicultorCreado);
-       if (typeof  idProveedor === 'number') {
-        this.apicultorService.asignarAcopiador(idApicultorCreado,  idProveedor).subscribe({
-          next: () => {
-            Swal.fire('Éxito', 'Apicultor creado y acopiador asignado.', 'success');
-            this.obtenerApicultores();
-            this.closeModal();
-            this.agregarApicultorForm.reset();
-          },
-          error: (err) => {
-            console.error('Error al asignar acopiador:', err);
-            Swal.fire('Error', 'Apicultor creado, pero no se pudo asignar el acopiador.', 'error');
-          }
-        }); 
-      } else {
-        Swal.fire('Error', 'No se pudo asignar el acopiador porque el valor es inválido.', 'error');
-      } 
+      const idApicultorCreado = res?.data?.idApicultor;
+
+      if (!idApicultorCreado) {
+        Swal.fire('Error', 'El apicultor se creó, pero no se recibió su ID.', 'error');
+        return;
+      }
+
+      this.apicultorService.asignarAcopiador(idApicultorCreado, idProveedor).subscribe({
+        next: () => {
+          Swal.fire('Éxito', 'Apicultor creado y acopiador asignado correctamente.', 'success');
+          this.obtenerApicultores();
+          this.closeModal();
+          this.agregarApicultorForm.reset();
+        },
+        error: (err) => {
+          console.error('Error al asignar acopiador:', err);
+          Swal.fire('Error', 'Apicultor creado, pero ocurrió un error al asignar el acopiador.', 'error');
+        }
+      });
     },
     error: (err) => {
       console.error('Error al agregar apicultor:', err);
       Swal.fire('Error', 'No se pudo agregar el apicultor.', 'error');
     }
-  });  
+  });
 }
 
 

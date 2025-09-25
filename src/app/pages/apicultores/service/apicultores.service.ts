@@ -80,7 +80,6 @@ agregarApicultor(apicultorData: any): Observable<any> {
   );
 }
 
-
   asignarAcopiador(idApicultor: number,  idProveedor: number): Observable<AsigAcopiador> {
   const token = this.jwtService.getToken();
   const headers = new HttpHeaders({
@@ -98,6 +97,23 @@ agregarApicultor(apicultorData: any): Observable<any> {
     { headers }
   );
 }
+
+updateApicultor(idApicultor: number, data: any): Observable<any> {
+  const token = this.jwtService.getToken();
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token ?? ''}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.put<any>(
+`${this.apiUrl}${this.path.apicultores.trim()}/${idApicultor}`, 
+    data,
+    { headers }
+  );
+}
+
+
 
 
 }
