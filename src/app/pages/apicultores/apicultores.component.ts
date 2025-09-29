@@ -191,8 +191,6 @@ obtenerApicultores() {
   totalColmenas: 0,
 }));
 
-     
-
     },
     error: (err: any) => {
       console.error('Error al obtener apicultores', err);

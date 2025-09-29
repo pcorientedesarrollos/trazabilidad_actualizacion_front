@@ -20,8 +20,6 @@ export class ApicultoresService {
     private jwtService: JwtService
   ) { }
 
-
-
   getAllApicultores(): Observable<Apicultor[]> {
     const token = this.jwtService.getToken();
     const headers = new HttpHeaders({

@@ -32,7 +32,6 @@ export const routes: Routes = [
             { path: 'entradas', component: EntradasComponent},
             { path: 'catalogos', component: CatalogosComponent},
             { path: 'utilerias', component: UtileriasComponent},
-
             //rutas hijas
         ]
     },

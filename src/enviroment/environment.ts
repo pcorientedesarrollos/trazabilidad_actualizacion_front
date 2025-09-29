@@ -10,6 +10,8 @@ export const path ={
   apicultoresActivar:'apicultores/activar',
   acopiadores : 'acopiadores',
   asigAcopiadorApicultor: 'asignacion-acopiador-apicultor-',
-  addApicultor: 'apicultores'
+  addApicultor: 'apicultores',
+  apiarios : 'apiarios',
+  acopiadorConApicultor : 'apiarios'
   
 }

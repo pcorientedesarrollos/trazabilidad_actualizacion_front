@@ -1,5 +1,6 @@
 export interface Apiarios {
-    nombreApiario: number;
+    idApiario: number,
+    nombreApiario: string;
     nombreApicultor: string;
     colemnas: number;
     latitud: string;

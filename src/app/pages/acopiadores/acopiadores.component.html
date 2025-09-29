@@ -1,11 +1,37 @@
 <div class="p-6 flex flex-col w-full">
-      <h1 class="text-2xl font-bold mb-4">Acopiadores</h1>
-        <div class="flex justify-between items-center mb-4 flex-wrap gap-4 bg-white p-3 rounded shadow">
-              <div class="w-full max-w-md flex items-center gap-4">
-                    <app-search-bar [label]="'Buscar acopiador'" [placeholder]="'Escribe aquí...'" [value]="searchTerm"
-                        (valueChange)="onSearchChange($event)">
-                    </app-search-bar>
-                </div>
+    <h1 class="text-2xl font-bold mb-4">Acopiadores</h1>
+    <div class="flex justify-between items-center mb-4 flex-wrap gap-4 bg-white p-3 rounded shadow">
+        <div class="w-full max-w-md flex items-center gap-4">
+            <app-search-bar [label]="'Buscar acopiador'" [placeholder]="'Escribe aquí...'" [value]="searchTerm"
+                (valueChange)="onSearchChange($event)">
+            </app-search-bar>
+            <select
+                class="border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-6 ml-8"
+                [(ngModel)]="estadoFiltro" (ngModelChange)="paginaActual = 1">
+                <option value="todos">Todos</option>
+                <option value="activo">Activos</option>
+                <option value="inactivo">Inactivos</option>
+            </select>
         </div>
-</div>
 
+        <div class="flex gap-8 mt-4 mr-6 ">
+            <app-button label="Descargar" [title]="'Descargar datos'" [bgColor]="'bg-green-600'"
+                icon="sim_card_download" [labelColor]="'text-white'" [hoverColor]="'hover:bg-green-700'" [size]="'md'"
+                (clicked)="ExelDownload()">
+
+            </app-button>
+
+            <app-button label="Agregar" [title]="'Agregar Apicultores'" [bgColor]="'bg-yellow-500'" icon="add_2"
+                [labelColor]="'text-white'" [hoverColor]="'hover:bg-yellow-700'" [size]="'md'" (click)="openModal()">
+            </app-button>
+        </div>
+    </div>
+   <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
+    
+     
+   </div>
+
+
+      <app-footer></app-footer>
+
+</div>

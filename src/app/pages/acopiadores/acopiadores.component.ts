@@ -1,25 +1,45 @@
 import { Component } from '@angular/core';
 import { SearchBarComponent } from "../../components/search-bar/search-bar.component";
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from "../../components/button/button.component";
+import { FooterComponent } from "../../components/footer/footer.component";
 
 @Component({
   selector: 'app-acopiadores',
-  imports: [SearchBarComponent],
+  imports: [SearchBarComponent, CommonModule, FormsModule, ButtonComponent, FooterComponent],
   templateUrl: './acopiadores.component.html',
   styleUrl: './acopiadores.component.css'
 })
 export class AcopiadoresComponent {
+openModal() {
+throw new Error('Method not implemented.');
+}
+ExelDownload() {
+throw new Error('Method not implemented.');
+}
     searchTerm = '';
   paginaActual = 1;
   elementosPorPagina = 7;
   estadoFiltro: string = 'todos';
+  isModalAddOpen = false;
 
   columnas = [
-  { label: 'Nombre Apiario', key: 'apiario', align: 'center' },
-  { label: 'Nombre de apicultor', key: 'apicultor', align: 'center' },
-  { label: 'N° Colmenas', key: 'colmenas', align: 'center' },
-  { label: 'latitud', key: 'latitud', align: 'center' },
-  { label: 'longitud', key: 'longitud', align: 'center' },
-  { label: 'alta', key: 'alta', align: 'center' } 
+  { label: 'Nombre del Acopiador', key: 'acopiador', align: 'center' },
+  { label: 'Tipo', key: 'tipo', align: 'center' },
+  { label: 'Datos Fiscales', key: 'datosFiscales', align: 'center' },
+  { label: 'Dirección', key: 'direccion', align: 'center' },
+  { label: 'Sagarpa', key: 'sagarpa', align: 'center' },
+  { label: 'Tipo de miel', key: 'tipodeMiel', align: 'center' },
+  { label: 'Empresa', key: 'empresa', align: 'center' },
+  { label: 'Cantidad', key: 'cantidad', align: 'center' },
+  { label: 'Estado', key: 'estado', align: 'center' },
+  { label: 'Latitud', key: 'latitud', align: 'center' },
+  { label: 'Longitud', key: 'longitud', align: 'center' },
+  { label: 'Nombre del apicultor', key: 'alta', align: 'center' },
+  { label: 'N° Colmenas', key: 'alta', align: 'center' },
+  { label: 'N° Apiarios', key: 'alta', align: 'center' },
+  { label: 'Estatus', key: 'alta', align: 'center' }
 ];
   onSearchChange(term: string) {
     this.searchTerm = term;
