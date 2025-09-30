@@ -10,7 +10,6 @@
             <app-button label="Descargar" [title]="'Descargar datos'" [bgColor]="'bg-green-600'"
                 icon="sim_card_download" [labelColor]="'text-white'" [hoverColor]="'hover:bg-green-700'" [size]="'md'"
                 (clicked)="ExelDownload()">
-
             </app-button>
 
             <app-button label="Agregar" [title]="'Agregar Apicultores'" [bgColor]="'bg-yellow-500'" icon="add_2"
@@ -18,12 +17,209 @@
             </app-button>
         </div>
     </div>
-   <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
-    
-     
-   </div>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg ">
+          <app-table [columnas]="columnas" [data]="paginados" [templateAcciones]="accionesTemplate"></app-table>
+                <ng-template #accionesTemplate let-acopiadorConApicultor>
+                        <button class="text-blue-600 hover:underline" (click)="updateModal(acopiadorConApicultor)">
+                                <span class="material-symbols-outlined">edit_square</span>
+                        </button>
+                </ng-template>
+    </div>
+       <app-paginacion [paginaActual]="paginaActual" [totalPaginas]="totalPaginas"
+                (cambiarPagina)="cambiarPagina($event)">
+        </app-paginacion>
+    <app-footer></app-footer>
+       <app-modal [isOpen]="isModalAddOpen" (closeModal)="closeModal()" [title]="'Agregar Apicultor'">
+  <form [formGroup]="agregarAcopiadorForm" (ngSubmit)="agregarAcopiador()" class="space-y-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Nombre del Acopiador -->
+      <div>
+        <label for="nombre" class="block text-gray-800 mb-1 font-medium">Nombre del Acopiador:</label>
+        <input type="text" id="nombre" placeholder="Nombre del acopiador" formControlName="nombre"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" required />
+      </div>
+
+      <!-- Nombre del Apiario -->
+      <div>
+        <label for="NombreApiario" class="block text-gray-800 mb-1 font-medium">Nombre del Apiario:</label>
+        <input type="text" id="NombreApiario" placeholder="Nombre del apiario" formControlName="NombreApiario"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" required />
+      </div>
+
+      <!-- Número de Colmenas -->
+      <div>
+        <label for="colmenas" class="block text-gray-800 mb-1 font-medium">N° de Colmenas:</label>
+        <input type="number" id="colmenas" placeholder="N° de colmenas" formControlName="colmenas"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- Latitud -->
+      <div>
+        <label for="latitud" class="block text-gray-800 mb-1 font-medium">Latitud:</label>
+        <input type="number" id="latitud" placeholder="Latitud" formControlName="latitud"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" step="0.000001" />
+      </div>
+
+      <!-- Longitud -->
+      <div>
+        <label for="longitud" class="block text-gray-800 mb-1 font-medium">Longitud:</label>
+        <input type="number" id="longitud" placeholder="Longitud" formControlName="longitud"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" step="0.000001" />
+      </div>
+
+      <!-- Alta (fecha) -->
+      <div>
+        <label for="alta" class="block text-gray-800 mb-1 font-medium">Fecha de Alta:</label>
+        <input type="datetime-local" id="alta" formControlName="alta"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- idDatosFiscales -->
+      <div>
+        <label for="idDatosFiscales" class="block text-gray-800 mb-1 font-medium">ID Datos Fiscales:</label>
+        <input type="text" id="idDatosFiscales" formControlName="idDatosFiscales"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- idDireccion -->
+      <div>
+        <label for="idDireccion" class="block text-gray-800 mb-1 font-medium">ID Dirección:</label>
+        <input type="text" id="idDireccion" formControlName="idDireccion"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- idSagarpa -->
+      <div>
+        <label for="idSagarpa" class="block text-gray-800 mb-1 font-medium">ID Sagarpa:</label>
+        <input type="text" id="idSagarpa" formControlName="idSagarpa"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- tipoDeMiel -->
+      <div>
+        <label for="tipoDeMiel" class="block text-gray-800 mb-1 font-medium">Tipo de Miel:</label>
+        <input type="text" id="tipoDeMiel" formControlName="tipoDeMiel"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- cantidad -->
+      <div>
+        <label for="cantidad" class="block text-gray-800 mb-1 font-medium">Cantidad:</label>
+        <input type="number" id="cantidad" formControlName="cantidad"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+    </div>
+
+    <!-- Botón de guardar -->
+    <div class="flex justify-end">
+      <app-button label="Guardar" [type]="'submit'" [title]="'Guardar acopiador'"
+        [bgColor]="'bg-yellow-500'" [hoverColor]="'hover:bg-yellow-700'" [size]="'sm'">
+      </app-button>
+    </div>
+  </form>
+</app-modal>
 
 
-      <app-footer></app-footer>
+<app-modal [isOpen]="isModalUpdateOpen" (closeModal)="closeModalUpdate()" [title]="'Actualizar Acopiador'">
+  <form [formGroup]="actualizarAcopiadorForm" (ngSubmit)="editarAcopiador()" class="space-y-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Nombre del Acopiador -->
+      <div>
+        <label for="nombre" class="block text-gray-800 mb-1 font-medium">Nombre del Acopiador:</label>
+        <input type="text" id="nombre" placeholder="Nombre del acopiador"
+               formControlName="nombre"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" required />
+      </div>
+
+      <!-- Nombre del Apiario -->
+<!--       <div>
+        <label for="NombreApiario" class="block text-gray-800 mb-1 font-medium">Nombre del Apiario:</label>
+        <input type="text" id="NombreApiario" placeholder="Nombre del apiario"
+               formControlName="NombreApiario"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" required />
+      </div> -->
+
+      <!-- Número de Colmenas -->
+      <div>
+        <label for="colmenas" class="block text-gray-800 mb-1 font-medium">N° de Colmenas:</label>
+        <input type="number" id="colmenas" placeholder="N° colmenas"
+               formControlName="colmenas"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- Latitud -->
+      <div>
+        <label for="latitud" class="block text-gray-800 mb-1 font-medium">Latitud:</label>
+        <input type="number" id="latitud" placeholder="Latitud"
+               formControlName="latitud" step="0.000001" min="-90" max="90"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- Longitud -->
+      <div>
+        <label for="longitud" class="block text-gray-800 mb-1 font-medium">Longitud:</label>
+        <input type="number" id="longitud" placeholder="Longitud"
+               formControlName="longitud" step="0.000001" min="-180" max="180"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- Fecha de Alta -->
+      <div>
+        <label for="alta" class="block text-gray-800 mb-1 font-medium">Fecha de Alta:</label>
+        <input type="datetime-local" id="alta"
+               formControlName="alta"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- idDatosFiscales -->
+      <div>
+        <label for="idDatosFiscales" class="block text-gray-800 mb-1 font-medium">ID Datos Fiscales:</label>
+        <input type="text" id="idDatosFiscales" formControlName="idDatosFiscales"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- idDireccion -->
+      <div>
+        <label for="idDireccion" class="block text-gray-800 mb-1 font-medium">ID Dirección:</label>
+        <input type="text" id="idDireccion" formControlName="idDireccion"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- idSagarpa -->
+      <div>
+        <label for="idSagarpa" class="block text-gray-800 mb-1 font-medium">ID Sagarpa:</label>
+        <input type="text" id="idSagarpa" formControlName="idSagarpa"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- tipoDeMiel -->
+      <div>
+        <label for="tipoDeMiel" class="block text-gray-800 mb-1 font-medium">Tipo de Miel:</label>
+        <input type="text" id="tipoDeMiel" formControlName="tipoDeMiel"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+      <!-- cantidad -->
+      <div>
+        <label for="cantidad" class="block text-gray-800 mb-1 font-medium">Cantidad:</label>
+        <input type="number" id="cantidad" formControlName="cantidad"
+               class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+    </div>
+
+    <!-- Botón de Guardar -->
+    <div class="flex justify-end">
+      <app-button label="Guardar" [type]="'submit'" [title]="'Guardar'"
+                  [bgColor]="'bg-yellow-500'" [hoverColor]="'hover:bg-yellow-700'" [size]="'sm'">
+      </app-button>
+    </div>
+  </form>
+</app-modal>
+
 
 </div>

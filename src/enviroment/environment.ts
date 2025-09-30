@@ -5,13 +5,13 @@ export const enviroment = {
 
 export const path ={
   auth : 'auth/login',
-  apicultores: 'apicultores ',
+  apicultores: 'apicultores',
   apicultoresBaja:'apicultores/baja',
   apicultoresActivar:'apicultores/activar',
   acopiadores : 'acopiadores',
   asigAcopiadorApicultor: 'asignacion-acopiador-apicultor-',
   addApicultor: 'apicultores',
   apiarios : 'apiarios',
-  acopiadorConApicultor : 'apiarios'
+  acopiadorConApicultor : 'acopiadorConApicultor'
   
 }

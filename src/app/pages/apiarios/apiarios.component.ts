@@ -73,25 +73,7 @@ export class ApiariosComponent {
     this.isModalUpdateOpen = false;
   }
 
-  get totalPaginas(): number {
-    return Math.ceil(this.filtrados.length / this.elementosPorPagina);
-  }
-
-  cambiarPagina(nuevaPagina: number) {
-    this.paginaActual = nuevaPagina;
-  }
-
-  get paginados() {
-    const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
-    return this.filtrados.slice(inicio, inicio + this.elementosPorPagina);
-  }
-
-  onSearchChange(term: string) {
-    this.searchTerm = term;
-    this.paginaActual = 1;
-  }
-
-  get filtrados(){
+    get filtrados(){
     return this.apiarios
     .filter(apiario => {
              const nombre = apiario.nombreApiario ?? '';
@@ -102,6 +84,22 @@ export class ApiariosComponent {
         apicultor.toLowerCase().includes(termino)
       );
     })
+  }
+    get paginados() {
+    const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
+    return this.filtrados.slice(inicio, inicio + this.elementosPorPagina);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.filtrados.length / this.elementosPorPagina);
+  }
+
+  cambiarPagina(nuevaPagina: number) {
+    this.paginaActual = nuevaPagina;
+  }
+  onSearchChange(term: string) {
+    this.searchTerm = term;
+    this.paginaActual = 1;
   }
 
   obtenertApiarios() {

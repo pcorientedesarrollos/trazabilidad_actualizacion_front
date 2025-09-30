@@ -24,6 +24,7 @@ export class AcopiadoresService{
       Authorization: `Bearer ${token ?? ''}`
     });
 
-    return this.http.get<AcopiadoresConApicultor[]>(`${this.apiUrl}${this.path.acopiadorConApicultor}`, { headers });
+   return this.http.get<AcopiadoresConApicultor[]>(`${this.apiUrl}${this.path.acopiadores}/${this.path.acopiadorConApicultor}`, { headers });
+
   }
 }
