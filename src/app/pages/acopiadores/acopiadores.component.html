@@ -5,13 +5,6 @@
             <app-search-bar [label]="'Buscar acopiador'" [placeholder]="'Escribe aquí...'" [value]="searchTerm"
                 (valueChange)="onSearchChange($event)">
             </app-search-bar>
-     <!--        <select
-                class="border border-gray-300 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-6 ml-8"
-                [(ngModel)]="estadoFiltro" (ngModelChange)="paginaActual = 1">
-                <option value="todos">Todos</option>
-                <option value="activo">Activos</option>
-                <option value="inactivo">Inactivos</option>
-            </select> -->
         </div>
         <div class="flex gap-8 mt-4 mr-6 ">
             <app-button label="Descargar" [title]="'Descargar datos'" [bgColor]="'bg-green-600'"

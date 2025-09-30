@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from "../../components/button/button.component";
 import { FooterComponent } from "../../components/footer/footer.component";
+import { ExcelService } from '../../services/excel.service';
 
 @Component({
   selector: 'app-acopiadores',
@@ -12,12 +13,12 @@ import { FooterComponent } from "../../components/footer/footer.component";
   styleUrl: './acopiadores.component.css'
 })
 export class AcopiadoresComponent {
+
+    constructor( private exelService : ExcelService) {}
 openModal() {
 throw new Error('Method not implemented.');
 }
-ExelDownload() {
-throw new Error('Method not implemented.');
-}
+
     searchTerm = '';
   paginaActual = 1;
   elementosPorPagina = 7;
@@ -44,6 +45,25 @@ throw new Error('Method not implemented.');
   onSearchChange(term: string) {
     this.searchTerm = term;
     this.paginaActual = 1;
+  }
+
+  ExelDownload() {
+ /* const data = this.filtrados;
+  const nombreArchivo = 'acopiadores';
+
+    this.exelService.exportAsExcelFile(data, nombreArchivo) */
+}
+
+  getAcopiadorConApicultor(){
+  
+  }
+  
+  agregarAcopiadorConApicultor(){
 
   }
+  updateAcopiadorConApicultor(){
+
+  }
+
+
 }
