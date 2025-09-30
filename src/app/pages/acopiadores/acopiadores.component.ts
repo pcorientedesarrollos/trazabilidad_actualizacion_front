@@ -64,13 +64,7 @@ public agregarAcopiadorForm = this.fb.group({
   idDireccion: [null],         
   idSagarpa: [null],           
   tipoDeMiel: [null],          
-  cantidad: [null],          
-  tipo: ['acopiador'],    
-  idComprador: [null],       
-  empresa: [0],               
-  idEstado: [1],              
-  activoInactivo: [0],        
-  deleteProve: [0],            
+  cantidad: [null]         
 });
 
  public actualizarAcopiadorForm = this.fb.group({
@@ -84,13 +78,7 @@ public agregarAcopiadorForm = this.fb.group({
   idDireccion: [null],         
   idSagarpa: [null],           
   tipoDeMiel: [null],          
-  cantidad: [null],          
-  tipo: ['acopiador'],    
-  idComprador: [null],       
-  empresa: [0],               
-  idEstado: [1],              
-  activoInactivo: [0],        
-  deleteProve: [0],  
+  cantidad: [null] 
 });
 
 
@@ -148,7 +136,6 @@ public agregarAcopiadorForm = this.fb.group({
 
  this.actualizarAcopiadorForm.patchValue({
   nombre: acopiadorConApicultor.nombreProovedor,
-/*   NombreApiario: acopiadorConApicultor.NombreApicultor, */
   colmenas: acopiadorConApicultor.colmenas,
   latitud: acopiadorConApicultor.latitud,
   longitud: acopiadorConApicultor.longitud,
@@ -157,13 +144,7 @@ public agregarAcopiadorForm = this.fb.group({
   idDireccion: acopiadorConApicultor.idDireccion,
   idSagarpa: acopiadorConApicultor.idSagarpa,
   tipoDeMiel: acopiadorConApicultor.tipoDeMiel,
-  cantidad: acopiadorConApicultor.cantidad,
-  tipo: acopiadorConApicultor.tipo ?? 'acopiador',
-  idComprador: acopiadorConApicultor.idComprador ?? null,
-  empresa: acopiadorConApicultor.empresa ?? 0,
-  idEstado: acopiadorConApicultor.idEstado ?? 1,
-  activoInactivo: acopiadorConApicultor.activoInactivo ?? 0,
-  deleteProve: acopiadorConApicultor.deleteProve ?? 0,
+  cantidad: acopiadorConApicultor.cantidad
 });
 
   this.isModalUpdateOpen = true;
