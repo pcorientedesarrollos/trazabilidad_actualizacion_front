@@ -69,7 +69,6 @@ alertMessage = '';
 accionModal: 'alta' | 'baja' | 'update' | null = null;
 
 
-
 columnas = [
   { label: 'Nombre Apicultor', key: 'apicultor', align: 'center' },
   { label: 'Acopiador Afiliado', key: 'acopiadorAfiliado', align: 'center' },
@@ -86,8 +85,6 @@ acopiadores: Acopiador[] = [];
 apicultor = {
   acopiador: '',
 };
-
-
 
   ngOnInit(): void {
     this.obtenerApicultores();

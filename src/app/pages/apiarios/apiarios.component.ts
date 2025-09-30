@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SearchBarComponent } from "../../components/search-bar/search-bar.component";
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonComponent } from "../../components/button/button.component";
 import { FooterComponent } from "../../components/footer/footer.component";
 import { ModalComponent } from "../../components/modal/modal.component";
@@ -14,22 +14,22 @@ import { ExcelService } from '../../services/excel.service';
 
 @Component({
   selector: 'app-apiarios',
-  imports: [FooterComponent, CommonModule, SearchBarComponent,  TableComponent,  PaginacionComponent, FormsModule, ButtonComponent, /* ModalComponent,  AlertComponent, */ ReactiveFormsModule],
+  imports: [FooterComponent, CommonModule, SearchBarComponent,  TableComponent,  PaginacionComponent, FormsModule, ButtonComponent, ModalComponent, /*  AlertComponent, */ ReactiveFormsModule, FormsModule],
   templateUrl: './apiarios.component.html',
   styleUrl: './apiarios.component.css'
 })
 export class ApiariosComponent {
-apicultor: any;
-updateModal(arg0: any) {
-throw new Error('Method not implemented.');
-}
 
+
+  public fb = inject(FormBuilder);
   constructor(private apiarioService: ApiariosService,  private exelService : ExcelService) { }
   searchTerm = '';
   paginaActual = 1;
   elementosPorPagina = 7;
   estadoFiltro: string = 'todos';
   isModalAddOpen = false;
+  isModalUpdateOpen = false;
+    apiarioSeleccionado: any = null;
 
   columnas = [
     { label: 'Nombre Apiario', key: 'nombreApiario', align: 'center' },
@@ -41,6 +41,24 @@ throw new Error('Method not implemented.');
   ];
   apiarios: any[] = [];
 
+   public agregarApiarioForm = this.fb.group({
+ nombreApiario: ['', Validators.required],
+  NombreApiario: ['', Validators.required],
+  colmenas: [null, Validators.required],
+  latitud: [null, Validators.required],    
+  longitud: [null, Validators.required],
+  alta: [null, Validators.required],
+});
+
+ public actualizarApiarioForm = this.fb.group({
+ nombreApiario: ['', Validators.required],
+  NombreApiario: ['', Validators.required],
+  colmenas: [null, Validators.required],
+  latitud: [null, Validators.required],    
+  longitud: [null, Validators.required],
+  alta: [null, Validators.required], 
+});
+
   ngOnInit(): void {
     this.obtenertApiarios();
   }
@@ -49,6 +67,10 @@ throw new Error('Method not implemented.');
   }
   closeModal() {
     this.isModalAddOpen = false;
+  }
+
+  closeModalUpdate() {
+    this.isModalUpdateOpen = false;
   }
 
   get totalPaginas(): number {
@@ -106,6 +128,28 @@ throw new Error('Method not implemented.');
   const nombreArchivo = 'apiarios';
     this.exelService.exportAsExcelFile(data, nombreArchivo)
   }
+  
+  updateModal(apiario: any){
+       this.apiarioSeleccionado = apiario;
 
+  this.actualizarApiarioForm.patchValue({
+ nombreApiario: apiario.nombreApiario,
+  NombreApiario: apiario.nombreApicultor,
+  colmenas: apiario.colemnas,
+  latitud: apiario.latitud,    
+  longitud: apiario.longitud,
+  alta: apiario.alta, 
+
+  });
+
+  this.isModalUpdateOpen = true;
+  }
+
+  agregarApiario() {
+
+  }
+  editarApiario(){
+
+  }
 
 }
