@@ -36,7 +36,7 @@ export class ApiariosComponent {
   columnas = [
     { label: 'Nombre Apiario', key: 'nombreApiario', align: 'center' },
     { label: 'Nombre de apicultor', key: 'nombreApicultor', align: 'center' },
-    { label: 'N° Colmenas', key: 'colmenas', align: 'center' },
+    { label: 'N° Colmenas', key: 'colemnas', align: 'center' },
     { label: 'latitud', key: 'latitud', align: 'center' },
     { label: 'longitud', key: 'longitud', align: 'center' },
     { label: 'alta', key: 'alta', align: 'center' }
@@ -118,6 +118,7 @@ public agregarApiarioForm = this.fb.group({
     this.apiarioService.getApiario().subscribe({
       next: (data :Apiarios[]) => {
         this.apiarios = data;
+        console.log(data)
       },
       error: (err) => {
         console.error('Error al obtener los apiarios', err);
