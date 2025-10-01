@@ -105,7 +105,7 @@ updateApicultor(idApicultor: number, data: any): Observable<any> {
   });
 
   return this.http.put<any>(
-`${this.apiUrl}${this.path.apicultores.trim()}/${idApicultor}`, 
+`${this.apiUrl}${this.path.apicultores}/${idApicultor}`, 
     data,
     { headers }
   );

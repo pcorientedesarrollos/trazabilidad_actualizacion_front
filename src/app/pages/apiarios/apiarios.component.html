@@ -42,20 +42,20 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <!-- Campos existentes -->
 
-                                <div>
+                      <!--           <div>
                                         <label for="nombreApiario" class="block text-gray-800 mb-1 font-medium">Nombre
                                                 del Apiarios:</label>
                                         <input type="text" id="nombreApiario" placeholder="Nombre del Apiario"
                                                 formControlName="nombreApiario"
                                                 class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
                                                 required />
-                                </div>
+                                </div> -->
 
                                 <div>
                                         <label for="curp" class="block text-gray-800 mb-1 font-medium">Nombre del
-                                                Apicultor:</label>
-                                        <input type="text" id="NombreApiario" placeholder="Nombre del Apicultor"
-                                                formControlName="NombreApiario"
+                                                Apiario:</label>
+                                        <input type="text" id="nombreApiario" placeholder="Nombre del Apicultor"
+                                                formControlName="nombreApiario"
                                                 class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
                                                 required />
                                 </div>
@@ -89,6 +89,17 @@
                                         <input type="datetime-local" id="alta" formControlName="alta"
                                                 class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
                                 </div>
+
+                       <div>
+                        <label for="id_apicultor" class="block text-gray-800 mb-1 font-medium">Selecciona un Apicultor:</label>
+                        <select id="id_apicultor" formControlName="id_apicultor"
+                                class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700">
+                        <option value="" disabled >-- Selecciona un apicultor --</option>
+                        <option *ngFor="let apicultor of apicultores" [value]="apicultor.idApicultor">
+                        {{ apicultor.nombre }}
+                        </option>
+                        </select>
+                        </div>
 
                         </div>
 
@@ -118,14 +129,14 @@
                                                 required />
                                 </div>
 
-                                <div>
+                   <!--              <div>
                                         <label for="curp" class="block text-gray-800 mb-1 font-medium">Nombre del
                                                 Apicultor:</label>
                                         <input type="text" id="NombreApiario" placeholder="Nombre del Apicultor"
                                                 formControlName="NombreApiario"
                                                 class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700"
                                                 required />
-                                </div>
+                                </div> -->
 
                                 <div>
                                         <label for="colmenas" class="block text-gray-800 mb-1 font-medium">N° de
@@ -156,6 +167,17 @@
                                         <input type="datetime-local" id="alta" formControlName="alta"
                                                 class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
                                 </div>
+<div>
+                        <label for="id_apicultor" class="block text-gray-800 mb-1 font-medium">Selecciona un Apicultor:</label>
+                        <select id="id_apicultor" formControlName="id_apicultor"
+                                class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700">
+                  <option value="" disabled>-- Selecciona un apicultor --</option>
+
+                        <option *ngFor="let apicultor of apicultores" [value]="apicultor.idApicultor">
+                        {{ apicultor.nombre }}
+                        </option>
+                        </select>
+                        </div>
 
                         </div>
 

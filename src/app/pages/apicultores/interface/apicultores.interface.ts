@@ -1,4 +1,5 @@
 export interface Apicultor {
+  idApicultor: number,
   direccion:string,
   estado_codigo: string
   municipio_codigo: string,

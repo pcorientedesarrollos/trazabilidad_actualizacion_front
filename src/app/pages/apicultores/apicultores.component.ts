@@ -222,7 +222,7 @@ this.apicultorService.updateApicultor(idApicultor, dataActualizada).subscribe({
   },
   error: (err) => {
     console.error("Error al actualizar:", err);
-     Swal.fire('Error', 'Apicultor actualizado', 'error');
+     Swal.fire('Error', 'Apicultor no actualizado', 'error');
 
   }
 });
