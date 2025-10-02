@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
+  usuario: string | null = null;
+
+ngOnInit(): void {
+  this.usuario = localStorage.getItem('usuario');
+}
 
 }

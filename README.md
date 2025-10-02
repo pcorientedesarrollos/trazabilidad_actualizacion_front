@@ -57,3 +57,12 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## version de angular cli y node que usa el rpogramador actualmente
+Angular CLI: 19.2.15
+Node: 22.15.0
+## Instalar dependencias
+npm install
+
+## ejecutar el proyecto en angular
+ng serve

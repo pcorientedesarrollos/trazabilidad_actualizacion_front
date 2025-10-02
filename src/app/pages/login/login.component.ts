@@ -33,13 +33,15 @@ export class LoginComponent {
       Contraseña: this.loginForm.value.Contraseña ?? ''
     };
 
-    this.service.login(data).subscribe({
-      next: (response) => {
-        this.router.navigate(['home']);
-      },
-      error: (error) => {
-        alert('Usuario o contraseña incorrectos');
-      }
-    });
+ this.service.login(data).subscribe({
+  next: (response) => {
+    const nombreUsuario = response.data.Usuario;
+   localStorage.setItem('usuario', nombreUsuario); 
+    this.router.navigate(['home']);
+  },
+  error: (error) => {
+    alert('Usuario o contraseña incorrectos');
+  }
+});
   }
 }
