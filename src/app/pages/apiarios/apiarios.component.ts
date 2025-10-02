@@ -33,6 +33,8 @@ export class ApiariosComponent {
   isModalUpdateOpen = false;
     apiarioSeleccionado: any = null;
 
+    isLoading: boolean = false;
+
   columnas = [
     { label: 'Nombre Apiario', key: 'nombreApiario', align: 'center' },
     { label: 'Nombre de apicultor', key: 'nombreApicultor', align: 'center' },
@@ -115,10 +117,22 @@ public agregarApiarioForm = this.fb.group({
     this.exelService.exportAsExcelFile(data, nombreArchivo)
   }
    obtenertApiarios() {
+      this.isLoading = true; 
+  const inicioCarga = Date.now(); 
     this.apiarioService.getApiario().subscribe({
       next: (data :Apiarios[]) => {
         this.apiarios = data;
-        console.log(data)
+
+         const tiempoTranscurrido = Date.now() - inicioCarga;
+      const tiempoRestante = 1000 - tiempoTranscurrido;
+
+      if (tiempoRestante > 0) {
+        setTimeout(() => {
+          this.isLoading = false;
+        }, tiempoRestante);
+      } else {
+        this.isLoading = false;
+      }
       },
       error: (err) => {
         console.error('Error al obtener los apiarios', err);

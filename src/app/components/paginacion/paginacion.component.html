@@ -1,18 +1,30 @@
-<div class="flex justify-center mt-4 gap-2">
-  <button class="bg-white  px-3 py-1 rounded border border-gray-300" [disabled]="paginaActual === 1"
-    (click)="irPagina(paginaActual - 1)">
-    Atrás
-  </button>
-
-  <ng-container *ngFor="let pagina of paginas">
-    <button class="px-3 py-1  rounded border border-gray-300"
-      [ngClass]="paginaActual === pagina ? 'bg-yellow-500 text-white font-semibold' : 'bg-white'"
-      (click)="irPagina(pagina)">
-      {{ pagina }}
+<div class="flex justify-center mt-4">
+  <div class="flex gap-2 overflow-x-auto max-w-full px-2 scrollbar-hide">
+    <!-- Botón Atrás -->
+    <button
+      class="bg-white px-3 py-1 rounded border border-gray-300 shrink-0"
+      [disabled]="paginaActual === 1"
+      (click)="irPagina(paginaActual - 1)">
+      Atrás
     </button>
-  </ng-container>
-  <button class="bg-white  px-3 py-1 rounded  border border-gray-300" [disabled]="paginaActual === totalPaginas"
-    (click)="irPagina(paginaActual + 1)">
-    Siguiente
-  </button>
+
+    <!-- Botones de páginas (solo 5 se renderizan ahora) -->
+    <ng-container *ngFor="let pagina of paginas">
+      <button
+        class="px-3 py-1 rounded border border-gray-300 shrink-0"
+        [ngClass]="paginaActual === pagina ? 'bg-yellow-500 text-white font-semibold' : 'bg-white'"
+        (click)="irPagina(pagina)">
+        {{ pagina }}
+      </button>
+    </ng-container>
+
+    <!-- Botón Siguiente -->
+    <button
+      class="bg-white px-3 py-1 rounded border border-gray-300 shrink-0"
+      [disabled]="paginaActual === totalPaginas"
+      (click)="irPagina(paginaActual + 1)">
+      Siguiente
+    </button>
+  </div>
 </div>
+

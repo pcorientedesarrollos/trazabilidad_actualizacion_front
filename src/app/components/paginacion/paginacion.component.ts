@@ -19,9 +19,25 @@ export class PaginacionComponent {
     }
   }
 
-  get paginas(): number[] {
-    return Array.from({ length: this.totalPaginas }, (_, i) => i + 1);
+ get paginas(): number[] {
+  const maxBotones = 5;
+  const total = this.totalPaginas;
+  const actual = this.paginaActual;
+
+  let inicio = Math.max(actual - Math.floor(maxBotones / 2), 1);
+  let fin = inicio + maxBotones - 1;
+
+  if (fin > total) {
+    fin = total;
+    inicio = Math.max(fin - maxBotones + 1, 1);
   }
+
+  const paginas = [];
+  for (let i = inicio; i <= fin; i++) {
+    paginas.push(i);
+  }
+  return paginas;
+}
 
 
 }

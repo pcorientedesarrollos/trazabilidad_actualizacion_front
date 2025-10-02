@@ -69,6 +69,10 @@ alertMessage = '';
 accionModal: 'alta' | 'baja' | 'update' | null = null;
 
 
+isLoading: boolean = false;
+
+
+
 columnas = [
   { label: 'Nombre Apicultor', key: 'apicultor', align: 'center' },
   { label: 'Acopiador Afiliado', key: 'acopiadorAfiliado', align: 'center' },
@@ -87,6 +91,7 @@ apicultor = {
 };
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.obtenerApicultores();
     this.obtenerAcopiadores();
   }
@@ -176,24 +181,41 @@ updateModal(apicultor: any) {
   }
 
 obtenerApicultores() {
+  this.isLoading = true; 
+  const inicioCarga = Date.now(); 
+
   this.apicultorService.getAllApicultores().subscribe({
     next: (data: Apicultor[]) => {
+      this.apicultores = data.map((a: Apicultor) => ({
+        ...a,
+        activo: a.estatus.toLowerCase() === 'activo',
+        apicultor: a.nombre,
+        acopiadorAfiliado: a.nombreProovedor,
+        totalApiarios: 0,
+        totalColmenas: 0,
+      }));
 
-   this.apicultores = data.map((a: Apicultor) => ({
-  ...a,
-  activo: a.estatus.toLowerCase() === 'activo',
-  apicultor: a.nombre, 
-  acopiadorAfiliado: a.nombreProovedor,
-  totalApiarios: 0, 
-  totalColmenas: 0,
-}));
+      const tiempoTranscurrido = Date.now() - inicioCarga;
+      const tiempoRestante = 1000 - tiempoTranscurrido;
 
+      // Asegura que se muestre al menos 2 segundos
+      if (tiempoRestante > 0) {
+        setTimeout(() => {
+          this.isLoading = false;
+        }, tiempoRestante);
+      } else {
+        this.isLoading = false;
+      }
     },
     error: (err: any) => {
       console.error('Error al obtener apicultores', err);
+      this.isLoading = false;
     }
   });
 }
+
+
+
 obtenerAcopiadores() {
   this.apicultorService.getAllAcopiadores().subscribe({
     next: (data) => {
