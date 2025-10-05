@@ -21,10 +21,9 @@ import Swal from 'sweetalert2';
   styleUrl: './apiarios.component.css'
 })
 export class ApiariosComponent {
-
+  constructor(private apiarioService: ApiariosService,  private exelService : ExcelService) { }
 
   public fb = inject(FormBuilder);
-  constructor(private apiarioService: ApiariosService,  private exelService : ExcelService) { }
   searchTerm = '';
   paginaActual = 1;
   elementosPorPagina = 7;

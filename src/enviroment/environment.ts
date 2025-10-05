@@ -13,6 +13,7 @@ export const path ={
   addApicultor: 'apicultores',
   apiarios : 'apiarios',
   acopiadorConApicultor : 'acopiadorConApicultor',
+  dashboard: 'dashboard'
   
   
 }

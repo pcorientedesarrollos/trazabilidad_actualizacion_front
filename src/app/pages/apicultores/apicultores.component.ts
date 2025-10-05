@@ -198,7 +198,6 @@ obtenerApicultores() {
       const tiempoTranscurrido = Date.now() - inicioCarga;
       const tiempoRestante = 1000 - tiempoTranscurrido;
 
-      // Asegura que se muestre al menos 2 segundos
       if (tiempoRestante > 0) {
         setTimeout(() => {
           this.isLoading = false;

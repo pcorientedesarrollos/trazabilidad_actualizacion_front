@@ -1,6 +1,8 @@
 import { Component, AfterViewInit } from '@angular/core';
 import Chart from 'chart.js/auto';
-import { FooterComponent } from "../footer/footer.component";
+import { FooterComponent } from "../../components/footer/footer.component";
+import { dashBoardService } from './service/dashboard.service';
+import { DashBoard } from './interface/dashboard.interface';
 
 
 @Component({
@@ -9,8 +11,10 @@ import { FooterComponent } from "../footer/footer.component";
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements AfterViewInit{
-    ngAfterViewInit(): void {
+export class DashboardComponent /* implements AfterViewInit */ {
+
+    constructor(private dashBoardService: dashBoardService) { }
+/*   ngAfterViewInit(): void {
     // Pie chart
     new Chart("pieChart", {
       type: 'pie',
@@ -21,10 +25,10 @@ export class DashboardComponent implements AfterViewInit{
           backgroundColor: ["#1D4ED8", "#3B82F6", "#10B981", "#F59E0B", "#F97316"]
         }]
       }
-    });
+    }); 
 
     // Bar chart
-    new Chart("barChart", {
+     new Chart("barChart", {
       type: 'bar',
       data: {
         labels: ["Copper", "Silver", "Gold", "Platinum"],
@@ -34,8 +38,16 @@ export class DashboardComponent implements AfterViewInit{
           data: [8.9, 10.5, 19.3, 21.4]
         }]
       }
-    });
-  }
+    }); 
+  } */
 
+   obtenerDashBoard(){
+    this.dashBoardService.getDashBoard().subscribe({
+    })
+    next:(data: DashBoard[]) =>{
+      console.log(data)
+    }
+    
+   }
 
 }
