@@ -1,40 +1,31 @@
-<div class="p-6 flex flex-col w-full">
-  <h1 class="text-2xl font-bold mb-6">Dashboard Admin</h1>
+<!-- Layout Principal -->
+<div class="flex flex-col min-h-screen">
+  <!-- Contenido principal -->
+  <main class="flex-grow p-6 w-full">
+    <h1 class="text-2xl font-bold mb-6">Dashboard Admin</h1>
 
-  <!-- KPIs -->
-  <div class="grid grid-cols-3 gap-4 mb-8">
-        <div class="bg-blue-500 text-white p-4 rounded-lg">
-      <div class="text-xl font-bold">{{ dashboardData[0]?.Acopiadores }}</div>
-      <div>Acopiador</div>
+    <!-- KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div class="bg-blue-500 text-white p-4 rounded-lg">
+        <div class="text-xl font-bold">{{ dashboardData[0]?.Acopiadores }}</div>
+        <div>Acopiador</div>
+      </div>
+      <div class="bg-red-400 text-white p-4 rounded-lg">
+        <div class="text-xl font-bold">{{ dashboardData[0]?.Apicultores }}</div>
+        <div>Apicultores</div>
+      </div>
+      <div class="bg-orange-500 text-white p-4 rounded-lg">
+        <div class="text-xl font-bold">{{ dashboardData[0]?.Apiarios }}</div>
+        <div>Apiarios</div>
+      </div>
+      <div class="bg-amber-500 text-white p-4 rounded-lg">
+        <div class="text-xl font-bold">1,200</div>
+        <div>Miel</div>
+      </div>
     </div>
-    <div class="bg-red-400 text-white p-4 rounded-lg">
-      <div class="text-xl font-bold">{{ dashboardData[0]?.Apicultores }}</div>
-      <div>Apicultores</div>
-    </div>
-    <div class="bg-orange-500 text-white p-4 rounded-lg">
-      <div class="text-xl font-bold">{{ dashboardData[0]?.Apiarios }}</div>
-      <div>Apiarios</div>
-    </div>
-        <div class="bg-amber-500 text-white p-4 rounded-lg">
-      <div class="text-xl font-bold">1,200</div>
-      <div>Miel</div>
-    </div>
+  </main>
 
-  </div>
-
-  <!-- Charts -->
-<!--   <div class="grid grid-cols-2 gap-6">
- 
-    <div class="bg-white shadow p-4 rounded">
-      <h2 class="text-lg font-semibold mb-2">My Daily Activities</h2>
-      <canvas id="pieChart"></canvas>
-    </div> 
-
-    <div class="bg-white shadow p-4 rounded">
-      <h2 class="text-lg font-semibold mb-2">Bar Chart</h2>
-      <canvas id="barChart"></canvas>
-    </div>
-  </div>  -->
-    <app-footer></app-footer> 
-   
+  <!-- Footer al fondo -->
+  <app-footer class="mt-auto"></app-footer>
 </div>
+-->>
