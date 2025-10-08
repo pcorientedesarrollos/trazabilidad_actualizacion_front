@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { Acopiador } from './interface/acopiadores.interface';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ExcelService } from '../../services/excel.service';
+import { ApicultoresConTotalApiarios } from './interface/apicultoresConTotalApiarios.interface';
 
 @Component({
   selector: 'app-apicultores',
@@ -74,15 +75,18 @@ isLoading: boolean = false;
 
 
 columnas = [
-  { label: 'Nombre Apicultor', key: 'apicultor', align: 'center' },
-  { label: 'Acopiador Afiliado', key: 'acopiadorAfiliado', align: 'center' },
-  { label: 'N° Apiarios', key: 'totalApiarios', align: 'center' },
-  { label: 'N° Colmenas', key: 'totalColmenas', align: 'center' },
-  { label: 'Estatus', key: 'estatus', align: 'center' } 
+  { label: 'Nombre Apicultor', key: 'nombreApicultor', align: 'center' },
+  { label: 'Senasica', key: 'senasica', align: 'center' },
+  { label: 'IppSiniga', key: 'ippSiniga', align: 'center' },
+  { label: 'Estado', key: 'estado', align: 'center' } ,
+   { label: 'Municipio', key: 'municipio', align: 'center' } ,
+    { label: 'N° Apiarios', key: 'totalApiarios', align: 'center' },
+    { label: 'Estatus', key: 'estatus', align: 'center' } 
 ];
 
 
   apicultores: any[] = [];
+  apicultoresConTotalApiarios :any[] = [];
 acopiadores: Acopiador[] = [];
 
 
@@ -101,22 +105,25 @@ apicultor = {
   }
 
 get filtrados() {
-  return this.apicultores
+  return this.apicultoresConTotalApiarios
     .filter(apicultor => {
-      const nombre = apicultor.apicultor ?? '';
-      const acopiador = apicultor.acopiadorAfiliado ?? '';
+      const nombreApicultor = (apicultor.nombreApicultor ?? '').toLowerCase();
+      const senasica = (apicultor.senasica ?? '').toString().toLowerCase();
       const termino = this.searchTerm.toLowerCase();
+
       return (
-        nombre.toLowerCase().includes(termino) ||
-        acopiador.toLowerCase().includes(termino)
+        nombreApicultor.includes(termino) ||
+        senasica.includes(termino)
       );
     })
     .filter(apicultor => {
-      if (this.estadoFiltro === 'activo') return apicultor.activo === true;
-      if (this.estadoFiltro === 'inactivo') return apicultor.activo === false;
+      const estatus = apicultor.estatus?.toLowerCase() ?? '';
+      if (this.estadoFiltro === 'activo') return estatus === 'activo';
+      if (this.estadoFiltro === 'inactivo') return estatus === 'inactivo';
       return true;
     });
 }
+
 
 cambiarEstado(apicultor: any, nuevoEstado: boolean) {
   this.apicultorSeleccionado = apicultor;
@@ -184,15 +191,16 @@ obtenerApicultores() {
   this.isLoading = true; 
   const inicioCarga = Date.now(); 
 
-  this.apicultorService.getAllApicultores().subscribe({
-    next: (data: Apicultor[]) => {
-      this.apicultores = data.map((a: Apicultor) => ({
+  this.apicultorService.getApicultorConToTalApiarios().subscribe({
+    next: (data: ApicultoresConTotalApiarios[]) => {
+      this. apicultoresConTotalApiarios = data.map((a: ApicultoresConTotalApiarios) => ({
         ...a,
-        activo: a.estatus.toLowerCase() === 'activo',
-        apicultor: a.nombre,
-        acopiadorAfiliado: a.nombreProovedor,
-        totalApiarios: 0,
-        totalColmenas: 0,
+       nombreApicultor: a.nombreApicultor,
+        senasica: a.senasica,
+        ippSiniga: a.ippSiniga,
+        totalApiarios : a.totalApiarios,
+        estado : a.estado,
+        estatus : a.estatus
       }));
 
       const tiempoTranscurrido = Date.now() - inicioCarga;

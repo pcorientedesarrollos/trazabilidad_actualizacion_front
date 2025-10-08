@@ -6,63 +6,73 @@ import { AcopiadoresConApicultor } from "../interface/acopiadores.interface";
 import { Observable } from "rxjs";
 import { AsigAcopiador } from "../../apicultores/interface/asigAcopiador.interface";
 import { Apicultor } from "../../apicultores/interface/apicultores.interface";
+import { AcopiadoresConTotalApicultores } from "../interface/acopiadoresConTotalApiocultores.interface";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class AcopiadoresService{
-          private apiUrl = enviroment.apiUrl;
-          private path = path;
+export class AcopiadoresService {
+  private apiUrl = enviroment.apiUrl;
+  private path = path;
 
-                  constructor(
+  constructor(
     private http: HttpClient,
     private jwtService: JwtService
   ) { }
 
-  getAcopiadorConApicultor(): Observable<AcopiadoresConApicultor[]>{
-            const token = this.jwtService.getToken();
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token ?? ''}`
-    });
-
-   return this.http.get<AcopiadoresConApicultor[]>(`${this.apiUrl}${this.path.acopiadores}/${this.path.acopiadorConApicultor}`, { headers });
-  }
-
-      getAllApicultores(): Observable<Apicultor[]> {
-       const token = this.jwtService.getToken();
-       const headers = new HttpHeaders({
-         Authorization: `Bearer ${token ?? ''}`
-       });
-   
-       return this.http.get<Apicultor[]>(`${this.apiUrl}${this.path.apicultores}`, { headers });
-     }
-
-  agregarAcopiador(data: any):Observable<any>{
-      const token = this.jwtService.getToken();
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token ?? ''}`
-  });
-
-  return this.http.post<any>(
-        `${this.apiUrl}${this.path.acopiadores}`, 
-    data,
-    { headers }
-  )
-
-  }
-
-    asignarApicultor(idApicultor: number,  idProveedor: number): Observable<AsigAcopiador> {
+  getAcopiadorConApicultor(): Observable<AcopiadoresConApicultor[]> {
     const token = this.jwtService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token ?? ''}`
     });
-  
+
+    return this.http.get<AcopiadoresConApicultor[]>(`${this.apiUrl}${this.path.acopiadores}/${this.path.acopiadorConApicultor}`, { headers });
+  }
+
+  getAllApicultores(): Observable<Apicultor[]> {
+    const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
+    return this.http.get<Apicultor[]>(`${this.apiUrl}${this.path.apicultores}`, { headers });
+  }
+
+
+  getAcopiadorConTotalApicultores(): Observable<AcopiadoresConTotalApicultores[]> {
+    const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+    return this.http.get<AcopiadoresConTotalApicultores[]>(`${this.apiUrl}${path.acopiadores}/${this.path.acopiadorConTotalApicultores}`, { headers });
+  }
+
+  agregarAcopiador(data: any): Observable<any> {
+    const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
+    return this.http.post<any>(
+      `${this.apiUrl}${this.path.acopiadores}`,
+      data,
+      { headers }
+    )
+
+  }
+
+  asignarApicultor(idApicultor: number, idProveedor: number): Observable<AsigAcopiador> {
+    const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
     const body = {
       idApicultor,
       idProveedor
     };
-  
+
     return this.http.post<AsigAcopiador>(
       `${this.apiUrl}${this.path.asigAcopiadorApicultor}`,
       body,
@@ -70,18 +80,18 @@ export class AcopiadoresService{
     );
   }
 
-  actualizarAcopiador(idAcopiador: number, data: any):Observable<any>{
-     const token = this.jwtService.getToken();
+  actualizarAcopiador(idAcopiador: number, data: any): Observable<any> {
+    const token = this.jwtService.getToken();
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token ?? ''}`,
-    'Content-Type': 'application/json'
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`,
+      'Content-Type': 'application/json'
+    });
 
     return this.http.put<any>(
-`${this.apiUrl}${this.path.acopiadores}/${idAcopiador}`, 
-    data,
-    { headers }
-  );
+      `${this.apiUrl}${this.path.acopiadores}/${idAcopiador}`,
+      data,
+      { headers }
+    );
   }
 }

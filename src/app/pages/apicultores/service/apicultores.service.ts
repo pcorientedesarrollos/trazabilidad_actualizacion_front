@@ -7,6 +7,7 @@ import { JwtService } from "../../../services/jwt.service";
 import { Response } from "../../../interface/response.interface";
 import { Acopiador } from "../interface/acopiadores.interface";
 import { AsigAcopiador } from "../interface/asigAcopiador.interface";
+import { ApicultoresConTotalApiarios } from "../interface/apicultoresConTotalApiarios.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,16 @@ export class ApicultoresService {
 
   }
 
+  
+  getApicultorConToTalApiarios():Observable<ApicultoresConTotalApiarios[]>{
+         const token = this.jwtService.getToken();
+      const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`
+    });
+
+    return this.http.get<ApicultoresConTotalApiarios[]>(`${this.apiUrl}${this.path.apicultores}/${this.path.apicultorConTotalApiarios}`, { headers });
+
+   }
 bajaApicultores(id: number): Observable<Response> {
   const token = this.jwtService.getToken();
   const headers = new HttpHeaders({
