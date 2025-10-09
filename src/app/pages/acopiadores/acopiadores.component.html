@@ -40,7 +40,7 @@
 </div>
     <ng-template #accionesTemplate let-acopiadorConApicultor>
          <button  *ngIf="estadoFiltro === 'activo' || (estadoFiltro === 'todos' && acopiadorConApicultor.estatus?.toLowerCase() === 'activo')"
-      class="text-blue-600 hover:underline" (click)="updateModal(apicultor)">
+      class="text-blue-600 hover:underline"  (click)="updateModal(acopiadorConApicultor)">
         <span class="material-symbols-outlined">edit_square</span>
       </button>
 
@@ -157,82 +157,57 @@
     </form>
   </app-modal>
 
-  <app-modal [isOpen]="isModalUpdateOpen" (closeModal)="closeModalUpdate()" [title]="'Actualizar Acopiador'">
-    <form [formGroup]="actualizarAcopiadorForm" (ngSubmit)="editarAcopiador()" class="space-y-4">
+<app-modal [isOpen]="isModalUpdateOpen" (closeModal)="closeModalUpdate()" [title]="'Actualizar Acopiador'">
+  <form [formGroup]="actualizarAcopiadorForm" (ngSubmit)="editarAcopiador()" class="space-y-4">
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-        <!-- Nombre del Acopiador -->
-        <div>
-          <label for="nombre" class="block text-gray-800 mb-1 font-medium">Nombre del Acopiador:</label>
-          <input type="text" id="nombre" placeholder="Nombre del acopiador" formControlName="nombre"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" required />
-        </div>
-
-        <!-- idDatosFiscales -->
-        <div>
-          <label for="idDatosFiscales" class="block text-gray-800 mb-1 font-medium">ID Datos Fiscales:</label>
-          <input type="number" id="idDatosFiscales" formControlName="idDatosFiscales"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
-        </div>
-
-        <!-- idDireccion -->
-        <div>
-          <label for="idDireccion" class="block text-gray-800 mb-1 font-medium">ID Dirección:</label>
-          <input type="number" id="idDireccion" formControlName="idDireccion"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
-        </div>
-
-        <!-- idSagarpa -->
-        <div>
-          <label for="idSagarpa" class="block text-gray-800 mb-1 font-medium">ID Sagarpa:</label>
-          <input type="text" id="idSagarpa" formControlName="idSagarpa"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
-        </div>
-
-        <!-- tipoDeMiel -->
-        <div>
-          <label for="tipoDeMiel" class="block text-gray-800 mb-1 font-medium">Tipo de Miel:</label>
-          <input type="number" id="tipoDeMiel" formControlName="tipoDeMiel"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
-        </div>
-
-        <!-- cantidad -->
-        <div>
-          <label for="cantidad" class="block text-gray-800 mb-1 font-medium">Cantidad:</label>
-          <input type="number" id="cantidad" formControlName="cantidad"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
-        </div>
-
-        <!-- idEstado -->
-        <div>
-          <label for="idEstado" class="block text-gray-800 mb-1 font-medium">Estado:</label>
-          <input type="number" id="idEstado" formControlName="idEstado"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
-        </div>
-
-        <!-- Latitud -->
-        <div>
-          <label for="latitud" class="block text-gray-800 mb-1 font-medium">Latitud:</label>
-          <input type="number" id="latitud" placeholder="Latitud" formControlName="latitud"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" step="0.000001" />
-        </div>
-
-        <!-- Longitud -->
-        <div>
-          <label for="longitud" class="block text-gray-800 mb-1 font-medium">Longitud:</label>
-          <input type="number" id="longitud" placeholder="Longitud" formControlName="longitud"
-            class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" step="0.000001" />
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      
+      <!-- Nombre del Acopiador -->
+      <div>
+        <label for="nombre" class="block text-gray-800 mb-1 font-medium">Nombre del Acopiador:</label>
+        <input type="text" id="nombre" formControlName="nombre"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
       </div>
-      <!-- Botón de Guardar -->
-      <div class="flex justify-end">
-        <app-button label="Guardar" [type]="'submit'" [title]="'Guardar'" [bgColor]="'bg-yellow-500'"
-          [hoverColor]="'hover:bg-yellow-700'" [size]="'sm'">
-        </app-button>
+
+      <!-- ID Sagarpa -->
+      <div>
+        <label for="idSagarpa" class="block text-gray-800 mb-1 font-medium">ID Sagarpa:</label>
+        <input type="text" id="idSagarpa" formControlName="idSagarpa"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
       </div>
-    </form>
-  </app-modal>
+
+      <!-- Latitud -->
+      <div>
+        <label for="latitud" class="block text-gray-800 mb-1 font-medium">Latitud:</label>
+        <input type="number" id="latitud" formControlName="latitud"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" step="0.000001" />
+      </div>
+
+      <!-- Longitud -->
+      <div>
+        <label for="longitud" class="block text-gray-800 mb-1 font-medium">Longitud:</label>
+        <input type="number" id="longitud" formControlName="longitud"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" step="0.000001" />
+      </div>
+
+      <!-- Estado -->
+      <div>
+        <label for="idEstado" class="block text-gray-800 mb-1 font-medium">Estado:</label>
+        <input type="number" id="estado" formControlName="estado"
+          class="w-full text-sm py-1.5 px-2 border border-gray-400 rounded text-gray-700" />
+      </div>
+
+    </div>
+
+    <!-- Botón de Guardar -->
+    <div class="flex justify-end mt-4">
+      <app-button label="Guardar" [type]="'submit'" [title]="'Guardar cambios'" [bgColor]="'bg-yellow-500'"
+        [hoverColor]="'hover:bg-yellow-700'" [size]="'sm'">
+      </app-button>
+    </div>
+  </form>
+</app-modal>
+
 
 
 </div>

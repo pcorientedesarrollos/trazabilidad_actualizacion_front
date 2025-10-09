@@ -94,4 +94,22 @@ export class AcopiadoresService {
       { headers }
     );
   }
+
+
+  actualizarAcopiadorConTotalApicultor(idAcopiador: number, data: any): Observable<any> {
+    const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.put<any>(
+      `${this.apiUrl}${this.path.acopiadores}/${path.acopiadorConTotalApicultor}/${idAcopiador}`,
+      data,
+      { headers }
+    );
+  }
+
+  
+
+
 }
