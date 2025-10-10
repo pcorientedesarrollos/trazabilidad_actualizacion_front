@@ -16,7 +16,10 @@ export const path ={
   dashboard: 'dashboard',
   acopiadorConTotalApicultores:'AcopiadorConTotalApicultores',
   acopiadorConTotalApicultor:'AcopiadorConTotalApicultor',
-  apicultorConTotalApiarios:'ApicultorConTotalApiarios'
+  apicultorConTotalApiarios:'ApicultorConTotalApiarios',
+  acopiadoresActivar:'activar',
+  acopiadorBaja:'baja'
+
   
   
 }

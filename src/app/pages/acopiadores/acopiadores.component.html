@@ -38,32 +38,41 @@
   
   <p class="text-xl font-semibold">No hay acopiadores para mostrar</p>
 </div>
-    <ng-template #accionesTemplate let-acopiadorConApicultor>
-         <button  *ngIf="estadoFiltro === 'activo' || (estadoFiltro === 'todos' && acopiadorConApicultor.estatus?.toLowerCase() === 'activo')"
-      class="text-blue-600 hover:underline"  (click)="updateModal(acopiadorConApicultor)">
-        <span class="material-symbols-outlined">edit_square</span>
-      </button>
+<ng-template #accionesTemplate let-acopiadorConApicultor>
 
-      <button
-  *ngIf="estadoFiltro === 'activo' || (estadoFiltro === 'todos' && acopiadorConApicultor.estatus?.toLowerCase() === 'activo')"
-  class="text-green-500 hover:underline"
-  [title]="'Activar acopiador'"
-  (click)="''">
-  <span class="material-symbols-outlined">power_settings_new</span>
-</button>
+<ng-container *ngIf="acopiadorConApicultor.estatus?.toLowerCase() === 'inactivo'">
+  <button
+    class="text-green-500 hover:underline"
+    (click)="cambiarEstado(acopiadorConApicultor, true)"
+    [title]="'Dar de alta acopiador'">
+    <span class="material-symbols-outlined">power_settings_new</span>
+  </button>
+</ng-container>
 
-    <button
-  *ngIf="estadoFiltro === 'inactivo' || (estadoFiltro === 'todos' && acopiadorConApicultor.estatus?.toLowerCase() === 'inactivo')"
-  class="text-red-600 hover:underline"
-  [title]="'Baja Acopiador'"
-  (click)="''">
-  <span class="material-symbols-outlined">delete</span>
-</button>
-    </ng-template>
+<!-- Si está ACTIVO → mostrar botón de editar + dar de baja -->
+<ng-container *ngIf="acopiadorConApicultor.estatus?.toLowerCase() === 'activo'">
+  <button
+    class="text-blue-600 hover:underline"
+    (click)="updateModal(acopiadorConApicultor)"
+    [title]="'Editar acopiador'">
+    <span class="material-symbols-outlined">edit_square</span>
+  </button>
+
+  <button
+    class="text-red-600 hover:underline"
+    (click)="cambiarEstado(acopiadorConApicultor, false)"
+    [title]="'Dar de baja acopiador'">
+    <span class="material-symbols-outlined">delete</span>
+  </button>
+</ng-container>
+
+
+</ng-template>
   </div>
   <app-paginacion [paginaActual]="paginaActual" [totalPaginas]="totalPaginas" (cambiarPagina)="cambiarPagina($event)">
   </app-paginacion>
   <app-footer></app-footer>
+
   <app-modal [isOpen]="isModalAddOpen" (closeModal)="closeModal()" [title]="'Agregar Acopiador'">
     <form [formGroup]="agregarAcopiadorForm" (ngSubmit)="agregarAcopiador()">
 
@@ -208,6 +217,23 @@
   </form>
 </app-modal>
 
+<app-alert
+  [show]="isAlertOpen"
+  [icon]="accionModal === 'alta' ? 'check_circle' : accionModal === 'baja' ? 'highlight_off' : 'info'"
+  [iconColor]="accionModal === 'alta' ? 'text-green-500' : accionModal === 'baja' ? 'text-red-500' : 'text-blue-500'"
+  [title]="
+    accionModal === 'alta'
+      ? 'Alta Acopiador'
+      : accionModal === 'baja'
+      ? 'Baja Acopiador'
+      : 'Actualizar Acopiador'
+  "
+  [message]="alertMessage"
+  [confirmText]="'Sí, confirmar'"
+  [cancelText]="'Cancelar'"
+  (confirm)="confirmarCambioEstado()"
+  (cancel)="cancelarCambioEstado()">
+</app-alert>
 
 
 </div>

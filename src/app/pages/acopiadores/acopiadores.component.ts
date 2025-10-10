@@ -15,10 +15,12 @@ import { ApicultoresService } from '../apicultores/service/apicultores.service';
 import { Apicultor } from '../apicultores/interface/apicultores.interface';
 import Swal from 'sweetalert2';
 import { AcopiadoresConTotalApicultores } from './interface/acopiadoresConTotalApiocultores.interface';
+import { AlertComponent } from "../../components/alert/alert.component";
+import { Response } from '../../interface/response.interface';
 
 @Component({
   selector: 'app-acopiadores',
-  imports: [SearchBarComponent, CommonModule, FormsModule, ReactiveFormsModule, ButtonComponent, FooterComponent, TableComponent, PaginacionComponent, ModalComponent],
+  imports: [SearchBarComponent, CommonModule, FormsModule, ReactiveFormsModule, ButtonComponent, FooterComponent, TableComponent, PaginacionComponent, ModalComponent, AlertComponent],
   templateUrl: './acopiadores.component.html',
   styleUrl: './acopiadores.component.css'
 })
@@ -36,8 +38,10 @@ export class AcopiadoresComponent {
   isModalAddOpen = false;
   isModalUpdateOpen = false;
   acopiadorSeleccionado: any = null;
-
   isLoading: boolean = false;
+  alertMessage = '';
+  accionModal: 'alta' | 'baja' | 'update' | null = null;
+  isAlertOpen = false;
 
 
 
@@ -52,7 +56,7 @@ export class AcopiadoresComponent {
     { label: 'Estatus', key: 'estatus', align: 'center' }
   ]
 
-  acopiadorConApicultor: any[] = []; 
+  acopiadorConApicultor: any[] = [];
 
   acopiadorConTotalApicultores: any[] = [];
 
@@ -75,11 +79,11 @@ export class AcopiadoresComponent {
 
 
   public actualizarAcopiadorForm = this.fb.group({
-nombre: ['', Validators.required],
-  idSagarpa: ['', Validators.required],
-  latitud: [null, Validators.required],
-  longitud: [null, Validators.required],
-  estado: [null, Validators.required]
+    nombre: ['', Validators.required],
+    idSagarpa: ['', Validators.required],
+    latitud: [null, Validators.required],
+    longitud: [null, Validators.required],
+    estado: [null, Validators.required]
   });
 
   apicultores: any[] = [];
@@ -105,14 +109,22 @@ nombre: ['', Validators.required],
           nombreAcopiador.toLowerCase().includes(termino) ||
           sagarpa.toLowerCase().includes(termino)
         );
-      }).filter(acopiador =>{
-         const estatus = acopiador.estatus?.toLowerCase() ?? '';
-         if (this.estadoFiltro === 'activo') return estatus === 'activo';
-         if (this.estadoFiltro === 'inactivo') return estatus === 'inactivo';
-         return true;
+      }).filter(acopiador => {
+        const estatus = acopiador.estatus?.toLowerCase() ?? '';
+        if (this.estadoFiltro === 'activo') return estatus === 'activo';
+        if (this.estadoFiltro === 'inactivo') return estatus === 'inactivo';
+        return true;
       })
-    }
-  
+  }
+
+  cambiarEstado(acopiador: any, nuevoEstado: boolean) {
+    this.acopiadorSeleccionado = acopiador;
+    this.alertMessage = `¿Estás seguro que deseas ${nuevoEstado ? 'activar' : 'dar de baja'} a este apicultor?`;
+    this.accionModal = nuevoEstado ? 'alta' : 'baja';
+    this.isAlertOpen = true;
+  }
+
+
   get paginados() {
     const inicio = (this.paginaActual - 1) * this.elementosPorPagina;
     return this.filtrados.slice(inicio, inicio + this.elementosPorPagina);
@@ -143,20 +155,19 @@ nombre: ['', Validators.required],
     this.isModalAddOpen = false;
   }
 
-
   closeModalUpdate() {
     this.isModalUpdateOpen = false;
   }
 
   updateModal(acopiadorConApicultor: any) {
     this.acopiadorSeleccionado = acopiadorConApicultor;
-this.actualizarAcopiadorForm.patchValue({
-    nombre: acopiadorConApicultor.nombreAcopiador,
-    idSagarpa: acopiadorConApicultor.sagarpa,
-    latitud: acopiadorConApicultor.latitud,
-    longitud: acopiadorConApicultor.longitud,
-    estado: acopiadorConApicultor.estado
-  });
+    this.actualizarAcopiadorForm.patchValue({
+      nombre: acopiadorConApicultor.nombreAcopiador,
+      idSagarpa: acopiadorConApicultor.sagarpa,
+      latitud: acopiadorConApicultor.latitud,
+      longitud: acopiadorConApicultor.longitud,
+      estado: acopiadorConApicultor.estado
+    });
 
 
     this.isModalUpdateOpen = true;
@@ -265,39 +276,94 @@ this.actualizarAcopiadorForm.patchValue({
     });
   }
 
+  editarAcopiador() {
+    if (this.actualizarAcopiadorForm.invalid) {
+      this.actualizarAcopiadorForm.markAllAsTouched();
+      return;
+    }
 
+    const form = this.actualizarAcopiadorForm.value;
+    const idProveedor = this.acopiadorSeleccionado?.idProveedor;
 
+    const dataActualizada = {
+      nombre: form.nombre,
+      idSagarpa: form.idSagarpa,
+      latitud: parseFloat(form.latitud!),
+      longitud: parseFloat(form.longitud!),
+      idEstado: Number(form.estado)
+    };
 
-editarAcopiador() {
-  if (this.actualizarAcopiadorForm.invalid) {
-    this.actualizarAcopiadorForm.markAllAsTouched();
-    return;
+    this.acopiadoresService.actualizarAcopiadorConTotalApicultor(idProveedor, dataActualizada).subscribe({
+      next: () => {
+        Swal.fire('Éxito', 'Acopiador actualizado correctamente.', 'success');
+        this.obtenerAcopiadorConApicultor();
+        this.closeModalUpdate();
+      },
+      error: (err) => {
+        console.error('Error al actualizar acopiador:', err);
+        Swal.fire('Error', err?.error?.message || 'No se pudo actualizar el acopiador.', 'error');
+      }
+    });
   }
 
-  const form = this.actualizarAcopiadorForm.value;
-  const idProveedor = this.acopiadorSeleccionado?.idProveedor;
+confirmarCambioEstado() {
+  if (!this.acopiadorSeleccionado || !this.accionModal) return;
 
-  const dataActualizada = {
-    nombre: form.nombre,
-    idSagarpa: form.idSagarpa,
-    latitud: parseFloat(form.latitud!),
-    longitud: parseFloat(form.longitud!),
-    idEstado: Number(form.estado)
-  };
-
-  this.acopiadoresService.actualizarAcopiadorConTotalApicultor(idProveedor, dataActualizada).subscribe({
-    next: () => {
-      Swal.fire('Éxito', 'Acopiador actualizado correctamente.', 'success');
-      this.obtenerAcopiadorConApicultor();
-      this.closeModalUpdate();
-    },
-    error: (err) => {
-      console.error('Error al actualizar acopiador:', err);
-      Swal.fire('Error', err?.error?.message || 'No se pudo actualizar el acopiador.', 'error');
-    }
-  });
+  if (this.accionModal === 'alta') {
+    this.acopiadoresService.activarAcopiador(this.acopiadorSeleccionado.idProveedor).subscribe({
+      next: (res) => {
+        Swal.fire({
+          title: '¡Alerta!',
+          text: res.mensaje,
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+        this.obtenerApicultores();
+        this.obtenerAcopiadorConApicultor(); // <-- te falta esto para refrescar la tabla
+        this.cancelarCambioEstado();
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          title: 'Error',
+          text: err.error?.mensaje || 'No se pudo activar el acopiador',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  } else if (this.accionModal === 'baja') {
+    this.acopiadoresService.bajaAcopiador(this.acopiadorSeleccionado.idProveedor).subscribe({
+      next: (res) => {
+        Swal.fire({
+          title: '¡Alerta!',
+          text: res.mensaje,
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+        this.obtenerApicultores();
+        this.obtenerAcopiadorConApicultor(); 
+        this.cancelarCambioEstado();
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          title: 'Error',
+          text: err.error?.mensaje || 'No se pudo dar de baja el acopiador',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
 }
 
+
+
+cancelarCambioEstado() {
+  this.isAlertOpen = false;
+  this.accionModal = null;
+}
 
 
 

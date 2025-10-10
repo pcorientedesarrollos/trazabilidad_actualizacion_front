@@ -68,8 +68,6 @@ export class ApicultoresComponent {
   apicultorSeleccionado: any = null;
 alertMessage = '';
 accionModal: 'alta' | 'baja' | 'update' | null = null;
-
-
 isLoading: boolean = false;
 
 

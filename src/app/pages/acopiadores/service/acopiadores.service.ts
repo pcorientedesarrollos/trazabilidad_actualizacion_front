@@ -3,10 +3,11 @@ import { enviroment, path } from "../../../../enviroment/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { JwtService } from "../../../services/jwt.service";
 import { AcopiadoresConApicultor } from "../interface/acopiadores.interface";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { AsigAcopiador } from "../../apicultores/interface/asigAcopiador.interface";
 import { Apicultor } from "../../apicultores/interface/apicultores.interface";
 import { AcopiadoresConTotalApicultores } from "../interface/acopiadoresConTotalApiocultores.interface";
+import { Response } from "../../../interface/response.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -108,6 +109,34 @@ export class AcopiadoresService {
       { headers }
     );
   }
+
+  
+  activarAcopiador(idAcopiador:number):Observable<Response>{
+          const token = this.jwtService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token ?? ''}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.put<any>(
+      `${this.apiUrl}${this.path.acopiadores}/${this.path.acopiadoresActivar}/${idAcopiador}`,
+          {},
+    { headers }
+    )
+  }
+
+bajaAcopiador(idAcopiador: number): Observable<Response> {
+  const token = this.jwtService.getToken();
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token ?? ''}`,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.delete<any>( 
+    `${this.apiUrl}${this.path.acopiadores}/${this.path.acopiadorBaja}/${idAcopiador}`,
+    { headers }
+  );
+}
+
 
   
 
