@@ -8,6 +8,7 @@ import { AsigAcopiador } from "../../apicultores/interface/asigAcopiador.interfa
 import { Apicultor } from "../../apicultores/interface/apicultores.interface";
 import { AcopiadoresConTotalApicultores } from "../interface/acopiadoresConTotalApiocultores.interface";
 import { Response } from "../../../interface/response.interface";
+import { Estados } from "../../../interface/estados.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,8 @@ export class AcopiadoresService {
 
     return this.http.get<Apicultor[]>(`${this.apiUrl}${this.path.apicultores}`, { headers });
   }
+
+
 
 
   getAcopiadorConTotalApicultores(): Observable<AcopiadoresConTotalApicultores[]> {

@@ -15,6 +15,8 @@ import { Acopiador } from './interface/acopiadores.interface';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ExcelService } from '../../services/excel.service';
 import { ApicultoresConTotalApiarios } from './interface/apicultoresConTotalApiarios.interface';
+import { EstadosService } from '../../services/estados.service';
+import { MunicipiosService } from '../../services/municipios.service';
 
 @Component({
   selector: 'app-apicultores',
@@ -25,7 +27,7 @@ import { ApicultoresConTotalApiarios } from './interface/apicultoresConTotalApia
 export class ApicultoresComponent {
    
    public fb = inject(FormBuilder);
-  constructor(private apicultorService: ApicultoresService, private exelService : ExcelService) {}
+  constructor(private apicultorService: ApicultoresService, private exelService : ExcelService, private estadosService:EstadosService, private municipiosService:MunicipiosService) {}
 
  public agregarApicultorForm = this.fb.group({
   nombre: ['', Validators.required],
@@ -85,7 +87,9 @@ columnas = [
 
   apicultores: any[] = [];
   apicultoresConTotalApiarios :any[] = [];
-acopiadores: Acopiador[] = [];
+acopiadores: any = [];
+estados : any[] =[];
+municipios:any[]=[];
 
 
 apicultor = {
@@ -158,20 +162,30 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
 updateModal(apicultor: any) {
   this.apicultorSeleccionado = apicultor;
 
+  let fechaAlta = '';
+  if (apicultor.alta) {
+    const dateObj = new Date(apicultor.alta);
+    if (!isNaN(dateObj.getTime())) {
+      // Fecha válida
+      fechaAlta = dateObj.toISOString().slice(0, 16);
+    } else {
+      console.warn('Fecha inválida para alta:', apicultor.alta);
+    }
+  }
+
   this.actualizarApicultorForm.patchValue({
-    nombre: apicultor.nombre,
+    nombre: apicultor.nombreApicultor,
     CURP: apicultor.CURP,
     RFC: apicultor.RFC,
-    alta: new Date(apicultor.alta).toISOString().slice(0, 16),
+    alta: fechaAlta,
     direccion: apicultor.direccion,
     estado_codigo: apicultor.estado_codigo,
     municipio_codigo: apicultor.municipio_codigo,
     Senasica: apicultor.Senasica,
     IPPSiniga: apicultor.IPPSiniga,
     codigo: apicultor.codigo,
-      idProveedor: apicultor.idProveedor,
-       estatus: apicultor.estatus
-
+    idProveedor: apicultor.idProveedor,
+    estatus: apicultor.estatus
   });
 
   this.isModalUpdateOpen = true;
@@ -220,16 +234,44 @@ obtenerApicultores() {
 }
 
 
-
 obtenerAcopiadores() {
   this.apicultorService.getAllAcopiadores().subscribe({
     next: (data) => {
       this.acopiadores = data;
+      console.log('Estos son mis acopiadores',data);
     },
     error: (err) => {
       console.error('Error al obtener acopiadores', err);
+       Swal.fire('Error', 'Error al obtener los acopiadores', 'error');
     }
   });
+}
+obtenerEstados(){
+  try {
+     this.estadosService.getEstados().subscribe({
+      next:(data)=>{
+        this.estados = data;
+      }
+    });
+    
+  } catch (error) {
+        console.error("Error al obtener los estados:", error);
+     Swal.fire('Error', 'Error al obtener los estados', 'error');
+    
+  }
+}
+
+obtenerMunicipios(){
+    try {
+      this.municipiosService.getMunicipios().subscribe({
+            next:(data)=>{
+              this.municipios = data;
+            }
+      })
+    } catch (error) {
+         console.error("Error al obtener los estados:", error);
+     Swal.fire('Error', 'Error al obtener los municipios', 'error');
+    }
 }
 
 editarApicultor() {

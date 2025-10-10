@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
 import { AcopiadoresConTotalApicultores } from './interface/acopiadoresConTotalApiocultores.interface';
 import { AlertComponent } from "../../components/alert/alert.component";
 import { Response } from '../../interface/response.interface';
+import { EstadosService } from '../../services/estados.service';
+import { MunicipiosService } from '../../services/municipios.service';
 
 @Component({
   selector: 'app-acopiadores',
@@ -28,7 +30,7 @@ export class AcopiadoresComponent {
 
   public fb = inject(FormBuilder);
 
-  constructor(private apicultorService: ApicultoresService, private acopiadoresService: AcopiadoresService, private exelService: ExcelService) { }
+  constructor(private apicultorService: ApicultoresService, private acopiadoresService: AcopiadoresService, private exelService: ExcelService,  private estadosService:EstadosService, private municipiosService:MunicipiosService) { }
 
 
   searchTerm = '';
@@ -57,8 +59,9 @@ export class AcopiadoresComponent {
   ]
 
   acopiadorConApicultor: any[] = [];
-
   acopiadorConTotalApicultores: any[] = [];
+  estados : any[] =[];
+municipios:any[]=[];
 
 
   public agregarAcopiadorForm = this.fb.group({
@@ -68,7 +71,7 @@ export class AcopiadoresComponent {
     idSagarpa: ['', Validators.required],
     tipoDeMiel: [null, Validators.required],
     cantidad: [null, Validators.required],
-    idEstado: [null, Validators.required],
+    idEstado: ["", Validators.required],
     latitud: [null, Validators.required],
     longitud: [null, Validators.required],
     idApicultor: ['', Validators.required],
@@ -83,7 +86,7 @@ export class AcopiadoresComponent {
     idSagarpa: ['', Validators.required],
     latitud: [null, Validators.required],
     longitud: [null, Validators.required],
-    estado: [null, Validators.required]
+    idEstado: ["", Validators.required]
   });
 
   apicultores: any[] = [];
@@ -97,6 +100,7 @@ export class AcopiadoresComponent {
   ngOnInit(): void {
     this.obtenerAcopiadorConApicultor();
     this.obtenerApicultores();
+    this.obtenerEstados()
   }
 
   get filtrados() {
@@ -160,13 +164,14 @@ export class AcopiadoresComponent {
   }
 
   updateModal(acopiadorConApicultor: any) {
+
     this.acopiadorSeleccionado = acopiadorConApicultor;
     this.actualizarAcopiadorForm.patchValue({
       nombre: acopiadorConApicultor.nombreAcopiador,
       idSagarpa: acopiadorConApicultor.sagarpa,
       latitud: acopiadorConApicultor.latitud,
       longitud: acopiadorConApicultor.longitud,
-      estado: acopiadorConApicultor.estado
+      idEstado: acopiadorConApicultor.idEstado
     });
 
 
@@ -185,12 +190,13 @@ export class AcopiadoresComponent {
           sagarpa: a.sagarpa,
           latitud: a.latitud,
           longitud: a.longitud,
+          idEstado:a.idEstado,
           estado: a.estado,
           totalApicultores: a.totalApicultores,
           estatus: a.estatus
 
         }));
-        console.log(data);
+        console.log('TotalApicultores',data);
         const tiempoTranscurrido = Date.now() - inicioCarga;
         const tiempoRestante = 1000 - tiempoTranscurrido;
         if (tiempoRestante > 0) {
@@ -221,6 +227,34 @@ export class AcopiadoresComponent {
       }
     });
   }
+  obtenerEstados(){
+    try {
+       this.estadosService.getEstados().subscribe({
+        next:(data)=>{
+          console.log(data);
+          this.estados = data;
+        }
+      });
+      
+    } catch (error) {
+          console.error("Error al obtener los estados:", error);
+       Swal.fire('Error', 'Error al obtener los estados', 'error');
+      
+    }
+  }
+  
+  obtenerMunicipios(){
+      try {
+        this.municipiosService.getMunicipios().subscribe({
+              next:(data)=>{
+                this.municipios = data;
+              }
+        })
+      } catch (error) {
+           console.error("Error al obtener los estados:", error);
+       Swal.fire('Error', 'Error al obtener los municipios', 'error');
+      }
+  }
   agregarAcopiador() {
     const form = this.agregarAcopiadorForm;
 
@@ -248,7 +282,6 @@ export class AcopiadoresComponent {
     };
 
 
-    // Primero agregamos el apicultor
     this.acopiadoresService.agregarAcopiador(nuevoAcopiador).subscribe({
 
       next: (res) => {
@@ -290,7 +323,7 @@ export class AcopiadoresComponent {
       idSagarpa: form.idSagarpa,
       latitud: parseFloat(form.latitud!),
       longitud: parseFloat(form.longitud!),
-      idEstado: Number(form.estado)
+      idEstado: Number(form.idEstado)
     };
 
     this.acopiadoresService.actualizarAcopiadorConTotalApicultor(idProveedor, dataActualizada).subscribe({
@@ -357,7 +390,6 @@ confirmarCambioEstado() {
     });
   }
 }
-
 
 
 cancelarCambioEstado() {

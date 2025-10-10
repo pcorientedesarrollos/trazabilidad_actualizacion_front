@@ -5,7 +5,7 @@ import { map, Observable } from "rxjs";
 import { Apicultor } from "../interface/apicultores.interface";
 import { JwtService } from "../../../services/jwt.service";
 import { Response } from "../../../interface/response.interface";
-import { Acopiador } from "../interface/acopiadores.interface";
+import { Acopiador, Acopiadores } from "../interface/acopiadores.interface";
 import { AsigAcopiador } from "../interface/asigAcopiador.interface";
 import { ApicultoresConTotalApiarios } from "../interface/apicultoresConTotalApiarios.interface";
 
@@ -30,13 +30,13 @@ export class ApicultoresService {
     return this.http.get<Apicultor[]>(`${this.apiUrl}${this.path.apicultores}`, { headers });
   }
 
-  getAllAcopiadores():Observable<Acopiador[]>{
+  getAllAcopiadores():Observable<Acopiadores[]>{
      const token = this.jwtService.getToken();
       const headers = new HttpHeaders({
       Authorization: `Bearer ${token ?? ''}`
     });
 
-    return this.http.get<Acopiador[]>(`${this.apiUrl}${this.path.acopiadores}`, { headers });
+    return this.http.get<Acopiadores[]>(`${this.apiUrl}${this.path.acopiadores}`, { headers });
 
   }
 

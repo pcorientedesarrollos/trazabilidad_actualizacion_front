@@ -8,3 +8,8 @@ export interface Acopiador {
   estado: string;
 
 }
+
+export interface Acopiadores{
+  idProveedor: number;
+  nombreAcopiador:string;
+}

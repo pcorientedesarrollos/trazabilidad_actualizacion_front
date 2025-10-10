@@ -18,8 +18,10 @@ export const path ={
   acopiadorConTotalApicultor:'AcopiadorConTotalApicultor',
   apicultorConTotalApiarios:'ApicultorConTotalApiarios',
   acopiadoresActivar:'activar',
-  acopiadorBaja:'baja'
-
+  acopiadorBaja:'baja',
+  ubicaciones: 'ubicaciones',
+  estados: 'estados',
+  municipios: 'allMunicipios'
   
   
 }

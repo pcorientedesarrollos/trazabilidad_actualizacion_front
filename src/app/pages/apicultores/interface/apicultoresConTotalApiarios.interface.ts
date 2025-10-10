@@ -4,7 +4,9 @@ export interface ApicultoresConTotalApiarios{
   senasica: number;
   ippSiniga: string;
   totalApiarios: string;
+  idEstado: number;
   estado: string;
+  idMunicipio:number;
   municipio: string;
   estatus: string;
 }

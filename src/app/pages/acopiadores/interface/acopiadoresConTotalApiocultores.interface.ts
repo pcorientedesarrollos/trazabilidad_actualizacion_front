@@ -4,6 +4,7 @@ idProveedor: number;
   sagarpa: string;
   latitud: string;
   longitud: string;
+  idEstado:number;
   estado: string;
   totalApicultores: string;
   estatus: string;
