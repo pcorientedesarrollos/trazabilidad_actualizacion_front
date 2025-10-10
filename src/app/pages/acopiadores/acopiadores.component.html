@@ -40,33 +40,35 @@
 </div>
 <ng-template #accionesTemplate let-acopiadorConApicultor>
 
-
-  <button  *ngIf="estadoFiltro === 'activo' || (estadoFiltro === 'todos' && acopiadorConApicultor.estatus?.toLowerCase() === 'activo')"
-    class="text-green-500 hover:underline"
-    (click)="cambiarEstado(acopiadorConApicultor, true)"
-    [title]="'Dar de alta acopiador'">
-    <span class="material-symbols-outlined">power_settings_new</span>
-  </button>
-
-
-
-  <button  *ngIf="estadoFiltro === 'activo' || (estadoFiltro === 'todos' && acopiadorConApicultor.estatus?.toLowerCase() === 'activo')"
-    class="text-blue-600 hover:underline"
-    (click)="updateModal(acopiadorConApicultor)"
-    [title]="'Editar acopiador'">
-    <span class="material-symbols-outlined">edit_square</span>
-  </button>
-
-  <button   *ngIf="estadoFiltro === 'inactivo' || (estadoFiltro === 'todos' && acopiadorConApicultor?.toLowerCase() === 'inactivo')"
+  <!-- Dar de baja si está activo -->
+  <button
+    *ngIf="acopiadorConApicultor.estatus?.toLowerCase() === 'activo'"
     class="text-red-600 hover:underline"
     (click)="cambiarEstado(acopiadorConApicultor, false)"
     [title]="'Dar de baja acopiador'">
     <span class="material-symbols-outlined">delete</span>
   </button>
 
+  <!-- Dar de alta si está inactivo -->
+  <button
+    *ngIf="acopiadorConApicultor.estatus?.toLowerCase() === 'inactivo'"
+    class="text-green-500 hover:underline"
+    (click)="cambiarEstado(acopiadorConApicultor, true)"
+    [title]="'Dar de alta acopiador'">
+    <span class="material-symbols-outlined">power_settings_new</span>
+  </button>
 
+  <!-- Editar solo si está activo -->
+  <button
+    *ngIf="acopiadorConApicultor.estatus?.toLowerCase() === 'activo'"
+    class="text-blue-600 hover:underline"
+    (click)="updateModal(acopiadorConApicultor)"
+    [title]="'Editar acopiador'">
+    <span class="material-symbols-outlined">edit_square</span>
+  </button>
 
 </ng-template>
+
   </div>
   <app-paginacion [paginaActual]="paginaActual" [totalPaginas]="totalPaginas" (cambiarPagina)="cambiarPagina($event)">
   </app-paginacion>

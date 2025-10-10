@@ -103,24 +103,24 @@ municipios:any[]=[];
     this.obtenerEstados()
   }
 
-  get filtrados() {
-    return this.acopiadorConTotalApicultores
-      .filter(acopiador => {
-        const nombreAcopiador = acopiador.nombreAcopiador ?? '';
-        const sagarpa = acopiador.sagarpa ?? '';
-        const termino = this.searchTerm.toLowerCase();
-        return (
-          nombreAcopiador.toLowerCase().includes(termino) ||
-          sagarpa.toLowerCase().includes(termino)
-        );
-      }).filter(acopiador => {
-        const estatus = acopiador.estatus?.toLowerCase() ?? '';
-        if (this.estadoFiltro === 'activo') return estatus === 'activo';
-        if (this.estadoFiltro === 'inactivo') return estatus === 'inactivo';
-        return true;
-      })
-  }
+get filtrados() {
+  return this.acopiadorConTotalApicultores
+    .filter(acopiador => {
+      const nombreAcopiador = String(acopiador.nombreAcopiador ?? '');
+      const sagarpa = String(acopiador.sagarpa ?? '');
+      const termino = this.searchTerm.toLowerCase();
 
+      return (
+        nombreAcopiador.toLowerCase().includes(termino) ||
+        sagarpa.toLowerCase().includes(termino)
+      );
+    }).filter(acopiador => {
+      const estatus = String(acopiador.estatus ?? '').toLowerCase();
+      if (this.estadoFiltro === 'activo') return estatus === 'activo';
+      if (this.estadoFiltro === 'inactivo') return estatus === 'inactivo';
+      return true;
+    });
+}
   cambiarEstado(acopiador: any, nuevoEstado: boolean) {
     this.acopiadorSeleccionado = acopiador;
     this.alertMessage = `¿Estás seguro que deseas ${nuevoEstado ? 'activar' : 'dar de baja'} a este apicultor?`;
