@@ -45,18 +45,13 @@ export class ApicultoresComponent {
 });
 
  public actualizarApicultorForm = this.fb.group({
-  nombre: ['', Validators.required],
-  CURP: ['', Validators.required],
-  RFC: [''],
-  alta: ['', Validators.required],
-  direccion: [''],
-  estado_codigo: [''],
-  municipio_codigo: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
-  Senasica: [''],
-  IPPSiniga: [''],
-  codigo: [''],
-  idProveedor: ['', Validators.required],
-  estatus: ['Activo'] // 
+ idApicultor: [''],
+  nombreApicultor: ['', Validators.required],
+  senasica: [''],
+  ippSiniga: [''],
+  totalApiarios: [''],
+  idEstado: [''],
+  claveMunicipio: [''],
 });
 
 
@@ -100,6 +95,8 @@ apicultor = {
     this.isLoading = true;
     this.obtenerApicultores();
     this.obtenerAcopiadores();
+        this.obtenerEstados()
+        this.obtenerMunicipios();
   }
 
   get totalPaginas(): number {
@@ -162,31 +159,18 @@ cambiarEstado(apicultor: any, nuevoEstado: boolean) {
 updateModal(apicultor: any) {
   this.apicultorSeleccionado = apicultor;
 
-  let fechaAlta = '';
-  if (apicultor.alta) {
-    const dateObj = new Date(apicultor.alta);
-    if (!isNaN(dateObj.getTime())) {
-      // Fecha válida
-      fechaAlta = dateObj.toISOString().slice(0, 16);
-    } else {
-      console.warn('Fecha inválida para alta:', apicultor.alta);
-    }
-  }
 
-  this.actualizarApicultorForm.patchValue({
-    nombre: apicultor.nombreApicultor,
-    CURP: apicultor.CURP,
-    RFC: apicultor.RFC,
-    alta: fechaAlta,
-    direccion: apicultor.direccion,
-    estado_codigo: apicultor.estado_codigo,
-    municipio_codigo: apicultor.municipio_codigo,
-    Senasica: apicultor.Senasica,
-    IPPSiniga: apicultor.IPPSiniga,
-    codigo: apicultor.codigo,
-    idProveedor: apicultor.idProveedor,
-    estatus: apicultor.estatus
-  });
+this.actualizarApicultorForm.patchValue({
+  idApicultor: apicultor.idApicultor,
+  nombreApicultor: apicultor.nombreApicultor,
+  senasica: apicultor.senasica,
+  ippSiniga: apicultor.ippSiniga,
+  totalApiarios: apicultor.totalApiarios,
+  idEstado: apicultor.idEstado,
+    claveMunicipio: apicultor.claveMunicipio,
+});
+
+
 
   this.isModalUpdateOpen = true;
 }
@@ -211,7 +195,10 @@ obtenerApicultores() {
         senasica: a.senasica,
         ippSiniga: a.ippSiniga,
         totalApiarios : a.totalApiarios,
+        idEstado : a.idApicultor,
         estado : a.estado,
+        claveMunicipio: a.claveMunicipio,
+        municipio: a.municipio,
         estatus : a.estatus
       }));
 
@@ -277,25 +264,34 @@ obtenerMunicipios(){
 editarApicultor() {
   if (this.actualizarApicultorForm.invalid) return;
 
-  const dataActualizada = this.actualizarApicultorForm.value;
+  const formData = this.actualizarApicultorForm.value;
   const idApicultor = this.apicultorSeleccionado?.idApicultor;
- console.log(dataActualizada)
-  console.log(idApicultor ) 
 
-this.apicultorService.updateApicultor(idApicultor, dataActualizada).subscribe({
-  next: () => {
-       Swal.fire('Éxito', 'Apicultor actualizado con exito.', 'success');
-    this.accionModal = 'update';  
-    this.isModalUpdateOpen = false;
-    this.obtenerApicultores();
-  },
-  error: (err) => {
-    console.error("Error al actualizar:", err);
-     Swal.fire('Error', 'Apicultor no actualizado', 'error');
-
+  // Validación de selects vacíos: usamos los valores originales si están vacíos
+  if (!formData.idEstado) {
+    formData.idEstado = this.apicultorSeleccionado?.idEstado;
   }
-});
+
+  if (!formData.claveMunicipio) {
+    formData.claveMunicipio = this.apicultorSeleccionado?.claveMunicipio;
+  }
+
+  console.log('Enviando datos actualizados:', formData);
+
+   this.apicultorService.updateApicultor(idApicultor, formData).subscribe({
+    next: () => {
+      Swal.fire('Éxito', 'Apicultor actualizado con éxito.', 'success');
+      this.accionModal = 'update';  
+      this.isModalUpdateOpen = false;
+      this.obtenerApicultores();
+    },
+    error: (err) => {
+      console.error("Error al actualizar:", err);
+      Swal.fire('Error', 'Apicultor no actualizado', 'error');
+    }
+  }); 
 }
+
 
 agregarApicultor() {
   if (this.agregarApicultorForm.invalid) {

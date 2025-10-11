@@ -109,16 +109,15 @@ agregarApicultor(apicultorData: any): Observable<any> {
 
 updateApicultor(idApicultor: number, data: any): Observable<any> {
   const token = this.jwtService.getToken();
-
   const headers = new HttpHeaders({
     Authorization: `Bearer ${token ?? ''}`,
     'Content-Type': 'application/json'
   });
 
   return this.http.put<any>(
-`${this.apiUrl}${this.path.apicultores}/${idApicultor}`, 
+`${this.apiUrl}${this.path.apicultores}/${this.path.apicultorConTotalApiarios}/${idApicultor}`, 
     data,
-    { headers }
+    {headers}
   );
 }
 

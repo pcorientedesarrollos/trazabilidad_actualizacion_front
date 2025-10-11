@@ -7,6 +7,7 @@ export interface ApicultoresConTotalApiarios{
   idEstado: number;
   estado: string;
   idMunicipio:number;
+  claveMunicipio:string;
   municipio: string;
   estatus: string;
 }

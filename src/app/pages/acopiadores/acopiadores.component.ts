@@ -86,7 +86,8 @@ municipios:any[]=[];
     idSagarpa: ['', Validators.required],
     latitud: [null, Validators.required],
     longitud: [null, Validators.required],
-    idEstado: ["", Validators.required]
+    idEstado: ["", Validators.required],
+    idMunicipio: ["", Validators.required]
   });
 
   apicultores: any[] = [];
@@ -171,7 +172,8 @@ get filtrados() {
       idSagarpa: acopiadorConApicultor.sagarpa,
       latitud: acopiadorConApicultor.latitud,
       longitud: acopiadorConApicultor.longitud,
-      idEstado: acopiadorConApicultor.idEstado
+      idEstado: acopiadorConApicultor.idEstado,
+      idMunicipio:acopiadorConApicultor.idMunicipio
     });
 
 
