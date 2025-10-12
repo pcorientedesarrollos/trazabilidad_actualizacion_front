@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Inject, Input, numberAttribute, Output } from '@angular/core';
 import { FooterComponent } from "../../components/footer/footer.component";
 import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from "../../components/search-bar/search-bar.component";
@@ -44,13 +44,13 @@ export class ApicultoresComponent {
   estatus: ['Activo'] // 
 });
 
- public actualizarApicultorForm = this.fb.group({
- idApicultor: [''],
+public actualizarApicultorForm = this.fb.group({
+  idApicultor: [''],
   nombre: ['', Validators.required],
   senasica: [''],
   ippSiniga: [''],
-  idEstado: [''],
-  claveMunicipio: [''],
+  idEstado: [''],        // acepta número o string
+  claveMunicipio: [''],  // acepta número o string
 });
 
 
@@ -122,17 +122,25 @@ get filtrados() {
     });
 }
 onEstadoChange(event: any) {
-  console.log('onEstadoChange → event:', event);
-  const idEstado = parseInt(event.target.value, 10);
+  const value = event?.target?.value;
+
+  if (!value || isNaN(Number(value))) {
+    console.warn('ID de estado no válido:', value);
+    this.estadoSeleccionado = null;
+    this.municipios = [];
+    return;
+  }
+
+  const idEstado = Number(value);
   this.estadoSeleccionado = this.estados.find(e => e.idEstado === idEstado);
-  console.log('estadoSeleccionado:', this.estadoSeleccionado);
 
   if (this.estadoSeleccionado) {
     this.obtenerMunicipiosByIdEstado(idEstado);
   } else {
-    this.municipios = []; 
+    this.municipios = [];
   }
 }
+
 
 cambiarEstado(apicultor: any, nuevoEstado: boolean) {
   this.apicultorSeleccionado = apicultor;
@@ -179,7 +187,7 @@ this.actualizarApicultorForm.patchValue({
     claveMunicipio: apicultor.claveMunicipio,
 });
 
-
+this.obtenerMunicipiosByIdEstado(apicultor.idEstado);
 
   this.isModalUpdateOpen = true;
 }
@@ -283,22 +291,42 @@ obtenerMunicipiosByIdEstado(idEstado: number) {
 editarApicultor() {
   if (this.actualizarApicultorForm.invalid) return;
 
-  const formData = this.actualizarApicultorForm.value;
+  let formData: any = this.actualizarApicultorForm.value;
+
+  ['idEstado', 'senasica'].forEach(campo => {
+    const valor = formData[campo];
+    if (typeof valor === 'string') {
+      const convertido = parseInt(valor, 10);
+      if (!isNaN(convertido)) {
+        formData[campo] = convertido;
+        this.actualizarApicultorForm.patchValue({ [campo]: convertido });
+      } else {
+        Swal.fire('Error', `El campo ${campo} no es válido.`, 'error');
+        return;
+      }
+    }
+  });
+
   const idApicultor = this.apicultorSeleccionado?.idApicultor;
+  if (!idApicultor) {
+    Swal.fire('Error', 'No se encontró el ID del apicultor a actualizar.', 'error');
+    return;
+  }
 
-
-   this.apicultorService.updateApicultor(idApicultor, formData).subscribe({
-    next: () => {
+  this.apicultorService.updateApicultor(idApicultor, formData).subscribe({
+    next: (data) => {
       Swal.fire('Éxito', 'Apicultor actualizado con éxito.', 'success');
       this.accionModal = 'update';  
       this.isModalUpdateOpen = false;
       this.obtenerApicultores();
     },
     error: (err) => {
+      console.error(err);
       Swal.fire('Error', 'Apicultor no actualizado', 'error');
     }
   }); 
 }
+
 
 
 agregarApicultor() {
