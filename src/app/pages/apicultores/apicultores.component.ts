@@ -46,10 +46,9 @@ export class ApicultoresComponent {
 
  public actualizarApicultorForm = this.fb.group({
  idApicultor: [''],
-  nombreApicultor: ['', Validators.required],
+  nombre: ['', Validators.required],
   senasica: [''],
   ippSiniga: [''],
-  totalApiarios: [''],
   idEstado: [''],
   claveMunicipio: [''],
 });
@@ -63,6 +62,7 @@ export class ApicultoresComponent {
   elementosPorPagina = 7; 
   estadoFiltro: string = 'todos';
   apicultorSeleccionado: any = null;
+  estadoSeleccionado:any = null;
 alertMessage = '';
 accionModal: 'alta' | 'baja' | 'update' | null = null;
 isLoading: boolean = false;
@@ -96,7 +96,6 @@ apicultor = {
     this.obtenerApicultores();
     this.obtenerAcopiadores();
         this.obtenerEstados()
-        this.obtenerMunicipios();
   }
 
   get totalPaginas(): number {
@@ -122,7 +121,18 @@ get filtrados() {
       return true;
     });
 }
+onEstadoChange(event: any) {
+  console.log('onEstadoChange → event:', event);
+  const idEstado = parseInt(event.target.value, 10);
+  this.estadoSeleccionado = this.estados.find(e => e.idEstado === idEstado);
+  console.log('estadoSeleccionado:', this.estadoSeleccionado);
 
+  if (this.estadoSeleccionado) {
+    this.obtenerMunicipiosByIdEstado(idEstado);
+  } else {
+    this.municipios = []; 
+  }
+}
 
 cambiarEstado(apicultor: any, nuevoEstado: boolean) {
   this.apicultorSeleccionado = apicultor;
@@ -162,10 +172,9 @@ updateModal(apicultor: any) {
 
 this.actualizarApicultorForm.patchValue({
   idApicultor: apicultor.idApicultor,
-  nombreApicultor: apicultor.nombreApicultor,
+  nombre: apicultor.nombreApicultor,
   senasica: apicultor.senasica,
   ippSiniga: apicultor.ippSiniga,
-  totalApiarios: apicultor.totalApiarios,
   idEstado: apicultor.idEstado,
     claveMunicipio: apicultor.claveMunicipio,
 });
@@ -191,11 +200,11 @@ obtenerApicultores() {
     next: (data: ApicultoresConTotalApiarios[]) => {
       this. apicultoresConTotalApiarios = data.map((a: ApicultoresConTotalApiarios) => ({
         ...a,
-       nombreApicultor: a.nombreApicultor,
+       nombre: a.nombreApicultor.toString(),
         senasica: a.senasica,
         ippSiniga: a.ippSiniga,
         totalApiarios : a.totalApiarios,
-        idEstado : a.idApicultor,
+        idEstado : a.idEstado,
         estado : a.estado,
         claveMunicipio: a.claveMunicipio,
         municipio: a.municipio,
@@ -214,7 +223,7 @@ obtenerApicultores() {
       }
     },
     error: (err: any) => {
-      console.error('Error al obtener apicultores', err);
+      Swal.fire('Error', 'Error al obtener los apicultores', 'error');
       this.isLoading = false;
     }
   });
@@ -225,10 +234,8 @@ obtenerAcopiadores() {
   this.apicultorService.getAllAcopiadores().subscribe({
     next: (data) => {
       this.acopiadores = data;
-      console.log('Estos son mis acopiadores',data);
     },
     error: (err) => {
-      console.error('Error al obtener acopiadores', err);
        Swal.fire('Error', 'Error al obtener los acopiadores', 'error');
     }
   });
@@ -248,7 +255,7 @@ obtenerEstados(){
   }
 }
 
-obtenerMunicipios(){
+/* obtenerMunicipios(){
     try {
       this.municipiosService.getMunicipios().subscribe({
             next:(data)=>{
@@ -259,6 +266,18 @@ obtenerMunicipios(){
          console.error("Error al obtener los estados:", error);
      Swal.fire('Error', 'Error al obtener los municipios', 'error');
     }
+} */
+obtenerMunicipiosByIdEstado(idEstado: number) {
+  console.log('Obteniendo municipios para estado:', idEstado);
+  this.municipiosService.getMunicipiosByIdEstado(idEstado).subscribe({
+    next: (data) => {
+      console.log('Datos municipios recibidos:', data);
+      this.municipios = data;
+    },
+    error: (error) => {
+      Swal.fire('Error', 'Error al obtener los municipios por estado', 'error');
+    }
+  });
 }
 
 editarApicultor() {
@@ -267,16 +286,6 @@ editarApicultor() {
   const formData = this.actualizarApicultorForm.value;
   const idApicultor = this.apicultorSeleccionado?.idApicultor;
 
-  // Validación de selects vacíos: usamos los valores originales si están vacíos
-  if (!formData.idEstado) {
-    formData.idEstado = this.apicultorSeleccionado?.idEstado;
-  }
-
-  if (!formData.claveMunicipio) {
-    formData.claveMunicipio = this.apicultorSeleccionado?.claveMunicipio;
-  }
-
-  console.log('Enviando datos actualizados:', formData);
 
    this.apicultorService.updateApicultor(idApicultor, formData).subscribe({
     next: () => {
@@ -286,7 +295,6 @@ editarApicultor() {
       this.obtenerApicultores();
     },
     error: (err) => {
-      console.error("Error al actualizar:", err);
       Swal.fire('Error', 'Apicultor no actualizado', 'error');
     }
   }); 
@@ -331,7 +339,6 @@ agregarApicultor() {
           this.agregarApicultorForm.reset();
         },
         error: (err) => {
-          console.error('Error al asignar acopiador:', err);
           Swal.fire('Error', 'Apicultor creado, pero ocurrió un error al asignar el acopiador.', 'error');
         }
       });

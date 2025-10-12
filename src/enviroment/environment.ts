@@ -21,7 +21,8 @@ export const path ={
   acopiadorBaja:'baja',
   ubicaciones: 'ubicaciones',
   estados: 'estados',
-  municipios: 'allMunicipios'
+  Allmunicipios: 'allMunicipios',
+  municipios:'municipios'
   
   
 }

@@ -50,6 +50,8 @@ export class ApicultoresService {
     return this.http.get<ApicultoresConTotalApiarios[]>(`${this.apiUrl}${this.path.apicultores}/${this.path.apicultorConTotalApiarios}`, { headers });
 
    }
+
+ 
 bajaApicultores(id: number): Observable<Response> {
   const token = this.jwtService.getToken();
   const headers = new HttpHeaders({
